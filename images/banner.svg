@@ -12,8 +12,8 @@
   <!-- 背景 -->
   <rect width="1920" height="400" fill="url(#bg)"/>
   <!-- 装饰线 -->
-  <line x1="660" y1="240" x2="860" y2="240" stroke="#888" stroke-width="1" opacity="0.4"/>
-  <line x1="1060" y1="240" x2="1260" y2="240" stroke="#888" stroke-width="1" opacity="0.4"/>
+  <line x1="560" y1="245" x2="790" y2="245" stroke="#888" stroke-width="1" opacity="0.4"/>
+  <line x1="1130" y1="245" x2="1360" y2="245" stroke="#888" stroke-width="1" opacity="0.4"/>
   <!-- KSKBL 居中文字 -->
-  <text x="960" y="215" text-anchor="middle" font-family="Georgia, SimSun, serif" font-size="72" font-weight="bold" fill="#e0e0e0" filter="url(#shadow)" letter-spacing="18">KSKBL</text>
+  <text x="960" y="218" text-anchor="middle" font-family="Georgia, SimSun, serif" font-size="100" font-weight="bold" fill="#e0e0e0" filter="url(#shadow)" letter-spacing="34">KSKBL</text>
 </svg>
