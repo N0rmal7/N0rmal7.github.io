@@ -27,7 +27,7 @@
 <meta property="og:description" content="有关glibc的一些基础知识">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-05-21T07:00:00.000Z">
-<meta property="article:modified_time" content="2026-05-21T14:23:45.765Z">
+<meta property="article:modified_time" content="2026-05-22T05:36:23.210Z">
 <meta property="article:author" content="N0rmal7">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="PWN">
@@ -216,9 +216,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-05-21 15:00:00 / 修改时间：22:23:45" itemprop="dateCreated datePublished" datetime="2026-05-21T15:00:00+08:00">2026-05-21</time>
+      <time title="创建时间：2026-05-21 15:00:00" itemprop="dateCreated datePublished" datetime="2026-05-21T15:00:00+08:00">2026-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-05-22 13:36:23" itemprop="dateModified" datetime="2026-05-22T13:36:23+08:00">2026-05-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -245,7 +251,7 @@
 <p>初学pwn的时候可以这么理解glibc：它本质上是一个“工具箱”，将一些最基础的功能（如输入输出、内存分配、字符串处理等）封装整合成了函数，通过调用这些函数，程序员可以轻松地实现各种功能，而不需要从头编写基础功能代码，从而省去了大量的开发时间和精力。</p>
 <p>同时，为了修复漏洞或者增加新功能，glibc库这一“工具箱”不断更新，其中“工具”的“类型与尺寸”也会发生改变——即不同glibc版本下，一些函数的结构、功能和地址偏移量也随之不同。</p>
 <h4 id="做题时遇到的实际问题与解决方法"><a href="#做题时遇到的实际问题与解决方法" class="headerlink" title="做题时遇到的实际问题与解决方法"></a>做题时遇到的实际问题与解决方法</h4><p>在做pwn题时，不同glibc版本的特性对于找出并解决题目漏洞起到重要作用。有些题目往往会给出题目附件之外的<code>libc.so.6</code>文件，这往往代表题目远端环境使用的libc库与本地环境使用的可能不同(这导致libc地址偏移量的不同)，需要我们手动绑定来达到与远端环境所使用的libc库一致的效果。</p>
-<p>笔者在初学ret2libc时疑惑为什么在本地打通后换到远端就不行了，本质就是因为libc库调用的版本不同，函数地址在libc中的固定偏移量不同，导致一开始泄露的got表地址就是错误的。<br>为了解决这个问题，需要用到 <code>patchelf</code> 这一工具来修改题目文件所绑定的libc.so.6文件(以及动态链接器文件ld-xxx.so)，使其在本地调试时的数据与远端环境的libc版本一致，从而避免问题发生。</p>
+<p>笔者在初学ret2libc时疑惑为什么在本地打通后换到远端就不行了，本质是因为libc库调用的版本不同，函数地址在libc中的固定偏移量不同，用本地的libc计算远端偏移，会导致地址错误。<br>为了解决这个问题，需要用到 <code>patchelf</code> 这一工具来修改题目文件所绑定的libc.so.6文件(以及动态链接器文件ld-xxx.so)，使其在本地调试时的数据与远端环境的libc版本一致，从而避免问题发生。</p>
 <p><strong>patchelf使用指令</strong><br><code>patchelf --set-interpreter ./ld文件路径 ./程序文件名</code>  # 修改程序的动态链接器路径<br><code>patchelf --set-rpath ./libc.so.6文件所在目录 ./程序文件名</code>  # 修改程序文件绑定的libc.so.6文件路径，直接写所在目录能自动寻找libc.so.6路径</p>
 
     </div>
