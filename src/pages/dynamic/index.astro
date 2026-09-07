@@ -1,0 +1,34 @@
+---
+import { Icon } from "astro-icon/components";
+import { dynamicConfig, siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/dynamic.css";
+
+if (!siteConfig.pages.dynamic) {
+	return Astro.redirect("/404/");
+}
+
+const title = dynamicConfig.title || i18n(I18nKey.dynamic);
+const description =
+	dynamicConfig.description || i18n(I18nKey.dynamicDescription);
+---
+
+<MainGridLayout title={title} description={description}>
+	<section class="dynamic-page" aria-labelledby="dynamic-page-title">
+		<div>
+			<header class="dynamic-page-header card-base">
+				<div class="dynamic-page-heading">
+					<div class="dynamic-page-icon" aria-hidden="true">
+						<Icon name="material-symbols:forum-rounded" />
+					</div>
+					<div>
+						<h2 id="dynamic-page-title">{title}</h2>
+						{description && <p>{description}</p>}
+					</div>
+				</div>
+			</header>
+		</div>
+	</section>
+</MainGridLayout>
