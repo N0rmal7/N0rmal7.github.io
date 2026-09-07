@@ -40,7 +40,7 @@ const pages = resolvePageToggles({
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "N0rmal's Blog",
+	title: "N0rmal7's Blog",
 
 	// 站点副标题
 	subtitle: "",
@@ -108,7 +108,7 @@ export const siteConfig: SiteConfig = {
 	// 导航栏配置
 	navbar: {
 		// 导航栏标题
-		title: "N0rmal's Blog",
+		title: "N0rmal7's Blog",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
