@@ -546,7 +546,6 @@ html.is-page-transitioning .banner-home-text-overlay {
     width: 100% !important;
     height: 100vh !important;
     height: 100lvh !important;
-    height: 100dvh !important;
     z-index: var(--overlay-z-index, -1) !important;
     opacity: var(--overlay-opacity, 0.8) !important;
     pointer-events: none !important;
@@ -566,7 +565,6 @@ html[data-wallpaper-mode="overlay"] #wallpaper-wrapper {
     width: 100% !important;
     height: 100vh !important;
     height: 100lvh !important;
-    height: 100dvh !important;
     z-index: var(--overlay-z-index, -1) !important;
     opacity: var(--overlay-opacity, 0.8) !important;
     pointer-events: none !important;
@@ -665,7 +663,6 @@ html[data-wallpaper-mode="overlay"] .absolute.w-full.z-30.pointer-events-none {
     width: 100% !important;
     height: 100vh !important;
     height: 100lvh !important;
-    height: 100dvh !important;
     z-index: var(--overlay-z-index, -1) !important;
     /* 全屏壁纸不透明（不需要背景透明度），壁纸本身全不透明显示 */
     opacity: 1 !important;
@@ -686,7 +683,6 @@ html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper {
     width: 100% !important;
     height: 100vh !important;
     height: 100lvh !important;
-    height: 100dvh !important;
     z-index: var(--overlay-z-index, -1) !important;
     opacity: 1 !important;
     pointer-events: none !important;
@@ -726,9 +722,7 @@ html[data-wallpaper-mode="fullscreen"] body:not(.is-home):not(.sticky-navbar):no
 
 /* 让 sticky 导航栏跨壁纸滑动、滚到内容区才释放；去掉 transition:none 使 .navbar-hidden 下滑可动画 */
 html[data-wallpaper-mode="fullscreen"] body.is-home:not(.sticky-navbar):not(.dynamic-navbar) #top-row {
-    height: calc(100vh);
     height: calc(100lvh);
-    height: calc(100dvh);
     overflow: visible !important;
 }
 
@@ -915,7 +909,6 @@ html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] #wallpa
 
 html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] body.is-home #wallpaper-wrapper {
     height: 100vh !important;
-    height: 100dvh !important;
 }
 
 html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] body:not(.is-home) #wallpaper-wrapper {
@@ -929,7 +922,6 @@ html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] body:no
     top: calc(var(--banner-height-non-home) - 3.5rem) !important;
     margin-top: 0 !important;
     min-height: calc(100vh - (var(--banner-height-non-home) - 3.5rem)) !important;
-    min-height: calc(100dvh - (var(--banner-height-non-home) - 3.5rem)) !important;
 }
 
 html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] #wallpaper-wrapper img {
@@ -944,7 +936,6 @@ html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] #wallpa
 
 html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] body.is-home .content-panel {
     min-height: 100vh;
-    min-height: 100dvh;
 }
 
 html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] body:not(.sticky-navbar):not(.dynamic-navbar) #top-row {
