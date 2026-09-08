@@ -530,22 +530,76 @@ const desktopWallpaperPosition = "0% 10%";
     </script>
     )}
 
-    <!-- QQ / X5 / TBS 内置 WebView 专用补丁：
-         检测到 QQ 系 UA 时给 <html> 挂上 qq-wp class，由 layout-styles.css 里的纯 CSS 覆盖规则接管：
-         wrapper 用 fixed + top/bottom 拉伸铺满（不依赖 vh/lvh/inset），图片按原比例高铺满、等比宽度、
-         水平居中、左右溢出裁掉。仅作用于 QQ 系 UA，不影响其他浏览器。 -->
+    <!-- 移动端 Fullscreen hero 等比填充保底：不依赖 UA / class / 外部样式表。
+         仅当视口 < 1024 时用 inline style 直接把壁纸容器与图片按“高度铺满、宽度等比、
+         水平居中、左右溢出裁掉”写死，绕开老 WebView 对百分比高度与 object-fit 的兼容问题。
+         桌面视口不执行，不影响正常浏览器。 -->
     <script is:inline data-swup-ignore-script>
         (function () {
-            if (window.__fireflyQQWallpaperPatch) return;
-            var ua = (navigator.userAgent || "").toLowerCase();
-            var isQQLike = ua.indexOf("mqqbrowser") !== -1 || ua.indexOf("mqq") !== -1 || ua.indexOf("qq/") !== -1 || ua.indexOf("qzone") !== -1 || ua.indexOf("x5") !== -1 || ua.indexOf("tbs") !== -1;
-            if (!isQQLike) return;
-            window.__fireflyQQWallpaperPatch = true;
-
-            function apply() {
-                document.documentElement.classList.add("qq-wp");
+            if (window.__fireflyMobileWallpaperInline) return;
+            function isMobileViewport() {
+                return (window.innerWidth || document.documentElement.clientWidth) < 1024;
             }
-
+            function stretch(e) {
+                if (!e) return;
+                e.style.position = "absolute";
+                e.style.top = "0";
+                e.style.left = "0";
+                e.style.right = "0";
+                e.style.bottom = "0";
+                e.style.width = "auto";
+                e.style.height = "auto";
+                e.style.overflow = "hidden";
+            }
+            function apply() {
+                if (!isMobileViewport()) return;
+                var wrap = document.getElementById("wallpaper-wrapper");
+                if (!wrap) return;
+                var wm = document.documentElement.getAttribute("data-wallpaper-mode");
+                var layout = document.documentElement.getAttribute("data-fullscreen-layout");
+                if (wm !== "fullscreen" || layout !== "hero") return;
+                wrap.style.position = "fixed";
+                wrap.style.top = "0";
+                wrap.style.left = "0";
+                wrap.style.right = "0";
+                wrap.style.bottom = "0";
+                wrap.style.width = "auto";
+                wrap.style.height = "auto";
+                wrap.style.minHeight = "0";
+                wrap.style.maxHeight = "none";
+                wrap.style.overflow = "hidden";
+                wrap.style.display = "block";
+                wrap.style.zIndex = "-1";
+                wrap.style.opacity = "1";
+                wrap.style.transform = "none";
+                wrap.style.pointerEvents = "none";
+                var slots = wrap.querySelectorAll(".banner-image-slot, .slide-item");
+                for (var s = 0; s < slots.length; s++) stretch(slots[s]);
+                var pics = wrap.querySelectorAll("picture");
+                for (var p = 0; p < pics.length; p++) stretch(pics[p]);
+                var imgs = wrap.querySelectorAll("img");
+                for (var i = 0; i < imgs.length; i++) {
+                    var im = imgs[i];
+                    im.style.display = "block";
+                    im.style.position = "absolute";
+                    im.style.top = "0";
+                    im.style.left = "50%";
+                    im.style.right = "auto";
+                    im.style.bottom = "auto";
+                    im.style.width = "auto";
+                    im.style.height = "100%";
+                    im.style.maxWidth = "none";
+                    im.style.margin = "0";
+                    im.style.transform = "translateX(-50%)";
+                    im.style.objectFit = "fill";
+                    im.style.objectPosition = "center center";
+                    im.style.filter = "none";
+                    im.style.opacity = "1";
+                }
+                var phs = wrap.querySelectorAll(".lqip-placeholder");
+                for (var j = 0; j < phs.length; j++) phs[j].style.display = "none";
+            }
+            window.__fireflyMobileWallpaperInline = true;
             apply();
             if (document.readyState === "loading") {
                 document.addEventListener("DOMContentLoaded", apply);
