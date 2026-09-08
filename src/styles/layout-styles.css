@@ -1021,11 +1021,17 @@ html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="classic"] #wallpa
     html[data-wallpaper-mode="fullscreen"] body.is-home #wallpaper-wrapper picture img,
     html[data-wallpaper-mode="fullscreen"] body.is-home #wallpaper-wrapper img {
         display: block !important;
-        width: 100% !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: auto !important;
         height: 100% !important;
         max-width: none !important;
         margin: 0 !important;
-        object-fit: cover !important;
+        transform: translateX(-50%) !important;
+        object-fit: fill !important;
         object-position: center center !important;
         filter: none !important;
         opacity: 1 !important;

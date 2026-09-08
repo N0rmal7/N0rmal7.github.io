@@ -530,23 +530,19 @@ const desktopWallpaperPosition = "0% 10%";
     </script>
     )}
 
-    <!-- 移动端 Fullscreen hero 保底（移动视口均执行，避免旧内核 object-fit/100vh 兼容问题）：
-         1) 把所有移动端可见图片槽/图片容器绝对定位铺满；
-         2) wrapper 高度钉死为首次 layout viewport 高度(px)，地址栏收展不再导致图片缩放；
-         3) 普通浏览器图片保持 object-fit:cover（视觉不变）；QQ/X5/TBS 旧内核改用
-            等比(height:100% + width:auto + 水平居中)呈现，绕开 object-fit 兼容问题。
-         仅处理当前设备可见槽位，避免桌面 hidden 槽的图片被强制显示而错位。 -->
+    <!-- 移动端 Fullscreen hero 等比填充保底（不依赖 UA / class / 外部样式表）。
+         仅当视口 < 1024 时用 inline style 直接把壁纸容器与图片按“高度铺满、宽度等比、
+         水平居中、左右溢出裁掉”写死，绕开老 WebView 对百分比高度与 object-fit 的兼容问题；
+         wrapper 高度钉死为首次 layout viewport 高度(px)，地址栏收展不触发重排缩放。
+         桌面视口不执行，不影响正常浏览器。 -->
     <script is:inline data-swup-ignore-script>
         (function () {
-            if (window.__fireflyMobileWallpaperGuard) return;
+            if (window.__fireflyMobileWallpaperInline) return;
             function isMobileViewport() {
                 return (window.innerWidth || document.documentElement.clientWidth) < 1024;
             }
             if (!isMobileViewport()) return;
-            window.__fireflyMobileWallpaperGuard = true;
-
-            var ua = (navigator.userAgent || "").toLowerCase();
-            var isQQLike = ua.indexOf("mqqbrowser") !== -1 || ua.indexOf("mqq") !== -1 || ua.indexOf("qq/") !== -1 || ua.indexOf("qzone") !== -1 || ua.indexOf("x5") !== -1 || ua.indexOf("tbs") !== -1;
+            window.__fireflyMobileWallpaperInline = true;
 
             var fixedH = 0;
             var fixedW = 0;
@@ -591,7 +587,6 @@ const desktopWallpaperPosition = "0% 10%";
                 setImp(wrap, "transform", "none");
                 setImp(wrap, "pointerEvents", "none");
 
-                var handled = false;
                 var slots = wrap.querySelectorAll(".banner-image-slot, .slide-item");
                 for (var s2 = 0; s2 < slots.length; s2++) {
                     var slot = slots[s2];
@@ -604,7 +599,6 @@ const desktopWallpaperPosition = "0% 10%";
                     setImp(slot, "width", "100%");
                     setImp(slot, "height", "100%");
                     setImp(slot, "overflow", "hidden");
-                    handled = true;
                 }
                 var pics = wrap.querySelectorAll("picture");
                 for (var p = 0; p < pics.length; p++) {
@@ -618,7 +612,6 @@ const desktopWallpaperPosition = "0% 10%";
                     setImp(pic, "width", "100%");
                     setImp(pic, "height", "100%");
                     setImp(pic, "overflow", "hidden");
-                    handled = true;
                 }
                 var imgs = wrap.querySelectorAll("img");
                 for (var i = 0; i < imgs.length; i++) {
@@ -628,36 +621,22 @@ const desktopWallpaperPosition = "0% 10%";
                     var inVisibleSlot = parent && (!parent.classList || !parent.classList.contains("hidden"));
                     var inPictureOfVisible = im.parentElement && im.parentElement.parentElement && isVisibleSlot(im.parentElement.parentElement);
                     if (!inVisibleSlot && !inPictureOfVisible) continue;
-                    if (isQQLike) {
-                        /* QQ/X5 旧内核：等比（高铺满 + 宽 auto + 水平居中），左右溢出裁掉 */
-                        setImp(im, "display", "block");
-                        setImp(im, "position", "absolute");
-                        setImp(im, "top", "0");
-                        setImp(im, "left", "50%");
-                        setImp(im, "right", "auto");
-                        setImp(im, "bottom", "auto");
-                        setImp(im, "width", "auto");
-                        setImp(im, "height", "100%");
-                        setImp(im, "maxWidth", "none");
-                        setImp(im, "margin", "0");
-                        setImp(im, "transform", "translateX(-50%)");
-                        setImp(im, "objectFit", "fill");
-                        setImp(im, "objectPosition", "center center");
-                        setImp(im, "filter", "none");
-                        setImp(im, "opacity", "1");
-                    } else {
-                        /* 普通浏览器：cover 填充（视觉与主题一致） */
-                        setImp(im, "display", "block");
-                        setImp(im, "width", "100%");
-                        setImp(im, "height", "100%");
-                        setImp(im, "maxWidth", "none");
-                        setImp(im, "margin", "0");
-                        setImp(im, "objectFit", "cover");
-                        setImp(im, "objectPosition", "center center");
-                        setImp(im, "filter", "none");
-                        setImp(im, "opacity", "1");
-                    }
-                    handled = true;
+                    /* 等比（高铺满 + 宽 auto + 水平居中），左右溢出裁掉；不依赖 object-fit */
+                    setImp(im, "display", "block");
+                    setImp(im, "position", "absolute");
+                    setImp(im, "top", "0");
+                    setImp(im, "left", "50%");
+                    setImp(im, "right", "auto");
+                    setImp(im, "bottom", "auto");
+                    setImp(im, "width", "auto");
+                    setImp(im, "height", "100%");
+                    setImp(im, "maxWidth", "none");
+                    setImp(im, "margin", "0");
+                    setImp(im, "transform", "translateX(-50%)");
+                    setImp(im, "objectFit", "fill");
+                    setImp(im, "objectPosition", "center center");
+                    setImp(im, "filter", "none");
+                    setImp(im, "opacity", "1");
                 }
                 var phs = wrap.querySelectorAll(".lqip-placeholder");
                 for (var j = 0; j < phs.length; j++) {
@@ -665,7 +644,6 @@ const desktopWallpaperPosition = "0% 10%";
                     var inSlot = ph.parentElement && isVisibleSlot(ph.parentElement);
                     if (inSlot) setImp(ph, "display", "none");
                 }
-                return handled;
             }
             apply();
             if (document.readyState === "loading") {
