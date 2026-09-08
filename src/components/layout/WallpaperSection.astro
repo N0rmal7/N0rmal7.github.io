@@ -529,7 +529,49 @@ const desktopWallpaperPosition = "0% 10%";
         })();
     </script>
     )}
-    
+
+    <!-- QQ / X5 内置浏览器专用补丁：旧内核无法可靠地把 <img> 按父容器百分比高度 + object-fit 铺满，
+         会退回图片固有比例并在下方留白。此处检测到 QQ 系 UA 时，把壁纸改成 #wallpaper-wrapper 的
+         CSS background（cover + center：上下贴住界面、左右按比例裁切、竖直/水平中心对齐），
+         并隐藏原生 img/LQIP，保证全屏填充。仅作用于 QQ 系内核，不影响其他浏览器。 -->
+    <script is:inline data-swup-ignore-script>
+        (function () {
+            if (window.__fireflyQQWallpaperPatch) return;
+            var ua = (navigator.userAgent || "").toLowerCase();
+            var isQQLike = ua.indexOf("mqqbrowser") !== -1 || ua.indexOf("qq/") !== -1 || ua.indexOf("x5/") !== -1 || ua.indexOf("tbs/") !== -1;
+            if (!isQQLike) return;
+            window.__fireflyQQWallpaperPatch = true;
+
+            function apply() {
+                var wrap = document.getElementById("wallpaper-wrapper");
+                if (!wrap) return;
+                var imgs = wrap.querySelectorAll("img");
+                var hit = null;
+                for (var i = 0; i < imgs.length; i++) {
+                    var src = imgs[i].currentSrc || imgs[i].src || "";
+                    if (src && imgs[i].naturalWidth > 0) { hit = imgs[i]; break; }
+                }
+                if (!hit) return;
+                wrap.style.backgroundImage = 'url("' + (hit.currentSrc || hit.src) + '")';
+                wrap.style.backgroundSize = "cover";
+                wrap.style.backgroundPosition = "center center";
+                wrap.style.backgroundRepeat = "no-repeat";
+                hit.style.display = "none";
+                var phs = wrap.querySelectorAll(".lqip-placeholder");
+                for (var j = 0; j < phs.length; j++) phs[j].style.display = "none";
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", apply);
+            } else {
+                apply();
+            }
+            window.addEventListener("load", apply);
+            setTimeout(apply, 400);
+            setTimeout(apply, 1200);
+        })();
+    </script>
+
     {backgroundWallpaper.playerEnable && typeof backgroundWallpaper.src === "object" && !Array.isArray(backgroundWallpaper.src) && backgroundWallpaper.src.playerUrl && (
 		<BackgroundPlayer playerUrl={backgroundWallpaper.src.playerUrl} playerMode={backgroundWallpaper.common?.playerMode ?? "order"} autoPlay={true} />
 	)}
