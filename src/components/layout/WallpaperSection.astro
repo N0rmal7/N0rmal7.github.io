@@ -532,7 +532,8 @@ const desktopWallpaperPosition = "0% 10%";
 
     <!-- QQ / X5 内置浏览器专用补丁：旧内核无法可靠地把 <img> 按父容器百分比高度 + object-fit 铺满，
          会退回图片固有比例并在下方留白。此处检测到 QQ 系 UA 时，把壁纸改成 #wallpaper-wrapper 的
-         CSS background（cover + center：上下贴住界面、左右按比例裁切、竖直/水平中心对齐），
+         CSS background：按原图比例让高度撑满容器（上下贴住界面），宽度随之等比放大，
+         超出左右边界由容器 overflow:hidden 裁掉，整体水平居中（不裁上下内容）。
          并隐藏原生 img/LQIP，保证全屏填充。仅作用于 QQ 系内核，不影响其他浏览器。 -->
     <script is:inline data-swup-ignore-script>
         (function () {
@@ -553,7 +554,7 @@ const desktopWallpaperPosition = "0% 10%";
                 }
                 if (!hit) return;
                 wrap.style.backgroundImage = 'url("' + (hit.currentSrc || hit.src) + '")';
-                wrap.style.backgroundSize = "cover";
+                wrap.style.backgroundSize = "auto 100%";
                 wrap.style.backgroundPosition = "center center";
                 wrap.style.backgroundRepeat = "no-repeat";
                 hit.style.display = "none";
