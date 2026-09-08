@@ -72,6 +72,16 @@ const viewConfigStr = JSON.stringify({
             document.removeEventListener('keydown', go, true);
             mgr.init();
         }
+
+        // local 播放列表已经随页面静态生成，不需要等待 window.load 或
+        // requestIdleCallback。立即初始化可以让播放器在首屏完成后马上设置
+        // 首曲的 metadata；meting 模式仍然延迟，避免在线 API 阻塞首屏。
+        var state = mgr.getState();
+        if (state.config && state.config.mode === 'local') {
+            go();
+            return;
+        }
+
         document.addEventListener('pointerdown', go, true);
         document.addEventListener('keydown', go, true);
 

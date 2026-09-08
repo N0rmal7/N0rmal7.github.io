@@ -98,7 +98,10 @@ const managerConfigStr = JSON.stringify({
     var audio = document.createElement('audio');
     audio.crossOrigin = 'anonymous';
     audio.style.display = 'none';
-    audio.preload = 'none'; // 阻止浏览器预加载和自动恢复播放
+    // 本地歌曲不需要等待网络 API。预加载 metadata 会在进入页面后尽早
+    // 获取时长和容器信息，但不会像 auto 一样默认下载整首歌曲；在线模式
+    // 的 URL 可能是临时地址，因此仍然保持 none。
+    audio.preload = config.mode === 'local' ? 'metadata' : 'none';
     document.body.appendChild(audio);
     audio.pause(); // 确保不自动播放
 
@@ -210,6 +213,12 @@ const managerConfigStr = JSON.stringify({
         if (ver !== loadVersion) return;
         var playUrl = currentTrackUrls[currentTrackUrlIndex];
         audio.src = playUrl;
+
+        // local 模式下主动开始 metadata 请求，让用户点击播放时可以直接
+        // 使用已经完成的媒体初始化，避免首次点击才开始解析 MP4 容器。
+        if (config.mode === 'local' && !autoPlay) {
+            audio.load();
+        }
 
         if (autoPlay) {
             audio.play().then(function () {
