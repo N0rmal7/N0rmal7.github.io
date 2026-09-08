@@ -8,6 +8,9 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 是否在侧边栏显示音乐播放器组件
 	showInSidebar: true,
 
+	// 播放本地歌曲时预加载后续歌曲数量；限制为 2，避免占满移动端带宽
+	preloadCount: 2,
+
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
 	mode: "local",
 

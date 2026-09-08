@@ -18,6 +18,9 @@ export type MusicPlayerConfig = {
 	// 是否在侧边栏显示音乐播放器组件
 	showInSidebar?: boolean;
 
+	// 本地模式下，播放时预加载后续歌曲的数量（0 表示关闭）
+	preloadCount?: number;
+
 	// Meting API 配置
 	meting?: {
 		// Meting API 地址

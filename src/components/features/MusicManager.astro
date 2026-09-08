@@ -32,6 +32,7 @@ const managerConfigStr = JSON.stringify({
 	mode: config.mode,
 	meting: config.meting,
 	localPlaylist: localPlaylist,
+	preloadCount: config.preloadCount ?? 2,
 	volume: config.volume ?? 0.7,
 	playMode: config.playMode ?? "list",
 	showLyrics: config.showLyrics ?? true,
@@ -209,6 +210,94 @@ const managerConfigStr = JSON.stringify({
     var currentTrackUrlIndex = 0;
     var errorSkipTimeout = null;
 
+    // ── Local track preloading ───────────────────────────────
+    // GitHub Pages 对每首 MP4 都是独立的 Range 请求。只预加载后面两首，
+    // 可以把切歌时的网络等待提前到当前歌曲播放期间，同时避免一进入页面
+    // 就下载整个歌单（当前歌单约 90 MB）。预加载使用独立的 audio 元素，
+    // 不会改变主播放器的播放状态。
+    var preloaders = Object.create(null);
+    var preloadTimer = null;
+
+    function getPreloadCount() {
+        if (config.mode !== 'local' || state.playMode !== 0) return 0;
+
+        var count = Number(config.preloadCount);
+        if (!isFinite(count)) count = 2;
+        count = Math.max(0, Math.min(3, Math.floor(count)));
+
+        var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (connection && connection.saveData) return 0;
+        if (connection && /^(slow-2g|2g)$/.test(connection.effectiveType || '')) {
+            return Math.min(count, 1);
+        }
+        return count;
+    }
+
+    function removePreloader(trackUrl) {
+        var preloader = preloaders[trackUrl];
+        if (!preloader) return;
+
+        // 先从表中移除，避免下面的 load() 在部分浏览器触发 error 时递归清理。
+        delete preloaders[trackUrl];
+        preloader.pause();
+        preloader.removeAttribute('src');
+        preloader.load();
+        if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+    }
+
+    function createPreloader(trackUrl) {
+        if (!trackUrl || preloaders[trackUrl]) return;
+
+        var preloader = document.createElement('audio');
+        preloader.crossOrigin = 'anonymous';
+        preloader.preload = 'auto';
+        preloader.muted = true;
+        preloader.setAttribute('aria-hidden', 'true');
+        // 不使用 display:none，兼容部分移动 WebView 对隐藏媒体元素的处理。
+        preloader.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
+        preloader.addEventListener('error', function () {
+            // 预加载失败不影响主播放器；下次切歌时仍可重新请求。
+            if (preloaders[trackUrl] === preloader) removePreloader(trackUrl);
+        });
+        preloaders[trackUrl] = preloader;
+        document.body.appendChild(preloader);
+        preloader.src = trackUrl;
+        preloader.load();
+    }
+
+    function preloadUpcomingTracks() {
+        var count = getPreloadCount();
+        if (count === 0 || state.playlist.length < 2) return;
+
+        var upcoming = Object.create(null);
+        for (var step = 1; step <= count && step < state.playlist.length; step++) {
+            var index = (state.currentIndex + step) % state.playlist.length;
+            var trackUrl = state.playlist[index] && state.playlist[index].url;
+            if (trackUrl) upcoming[trackUrl] = true;
+        }
+
+        // 当前播放顺序改变后，释放已经不再临近的预加载元素。
+        Object.keys(preloaders).forEach(function (trackUrl) {
+            if (!upcoming[trackUrl]) removePreloader(trackUrl);
+        });
+
+        Object.keys(upcoming).forEach(function (trackUrl) {
+            createPreloader(trackUrl);
+        });
+    }
+
+    function scheduleUpcomingPreload() {
+        if (preloadTimer !== null) clearTimeout(preloadTimer);
+        if (getPreloadCount() === 0) return;
+
+        // 让当前歌曲先建立少量缓冲，再启动后续请求，避免预加载抢占
+        // 当前歌曲的首段带宽。
+        preloadTimer = setTimeout(function () {
+            preloadTimer = null;
+            if (state.isPlaying && !audio.paused) preloadUpcomingTracks();
+        }, 1500);
+    }
+
     function tryPlayCurrentTrackUrl(autoPlay, ver) {
         if (ver !== loadVersion) return;
         var playUrl = currentTrackUrls[currentTrackUrlIndex];
@@ -226,6 +315,7 @@ const managerConfigStr = JSON.stringify({
                 state.isPlaying = true;
                 state.error = null;
                 emit('fm:play-state', { isPlaying: true });
+                scheduleUpcomingPreload();
             }).catch(function (e) {
                 if (ver !== loadVersion) return; // stale, discard
                 if (e.name === 'AbortError') return; // interrupted by new load
@@ -243,6 +333,11 @@ const managerConfigStr = JSON.stringify({
         state.currentIndex = index;
         var track = state.playlist[index];
         var ver = ++loadVersion;
+
+        if (preloadTimer !== null) {
+            clearTimeout(preloadTimer);
+            preloadTimer = null;
+        }
 
         if (errorSkipTimeout) {
             clearTimeout(errorSkipTimeout);
@@ -279,6 +374,7 @@ const managerConfigStr = JSON.stringify({
             audio.play().then(function () {
                 state.isPlaying = true;
                 emit('fm:play-state', { isPlaying: true });
+                scheduleUpcomingPreload();
             }).catch(function (e) {
                 if (e.name === 'AbortError') return;
                 console.warn('Playback failed:', e);
