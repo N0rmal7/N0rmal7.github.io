@@ -1,7 +1,7 @@
 ---
 title: "Ubuntu22.04下的PWN基础做题环境配置指南"
 published: 2026-09-01T00:00:00+08:00
-description: "从零搭建适合打PWN的Ubuntu22.04虚拟机环境指南"
+description: "从零开始搭建适合打PWN的Ubuntu22.04虚拟机环境指南"
 tags:
   - "PWN"
   - "Ubuntu"
