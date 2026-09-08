@@ -530,46 +530,63 @@ const desktopWallpaperPosition = "0% 10%";
     </script>
     )}
 
-    <!-- QQ / X5 内置浏览器专用补丁：旧内核无法可靠地把 <img> 按父容器百分比高度 + object-fit 铺满，
-         会退回图片固有比例并在下方留白。此处检测到 QQ 系 UA 时，把壁纸改成 #wallpaper-wrapper 的
-         CSS background：按原图比例让高度撑满容器（上下贴住界面），宽度随之等比放大，
-         超出左右边界由容器 overflow:hidden 裁掉，整体水平居中（不裁上下内容）。
-         并隐藏原生 img/LQIP，保证全屏填充。仅作用于 QQ 系内核，不影响其他浏览器。 -->
+    <!-- QQ / X5 / TBS 内置浏览器专用补丁：旧内核无法可靠地把 <img> 按父容器百分比高度 + object-fit 铺满，
+         会退回图片固有比例并在下方留白。检测到 QQ 系 UA 时，用 #wallpaper-wrapper 的 CSS background
+         呈现壁纸：按原图比例高度撑满容器（上下贴界），宽度等比放大、左右溢出由 overflow:hidden 裁掉，
+         水平居中。补丁尽可能早触发、并隐藏 wrapper 内全部 img/LQIP，避免旧内核仍画出半截固有尺寸图。 -->
     <script is:inline data-swup-ignore-script>
         (function () {
             if (window.__fireflyQQWallpaperPatch) return;
             var ua = (navigator.userAgent || "").toLowerCase();
-            var isQQLike = ua.indexOf("mqqbrowser") !== -1 || ua.indexOf("qq/") !== -1 || ua.indexOf("x5/") !== -1 || ua.indexOf("tbs/") !== -1;
+            var isQQLike = ua.indexOf("mqqbrowser") !== -1 || ua.indexOf("mqq") !== -1 || ua.indexOf("qq/") !== -1 || ua.indexOf("qq/") !== -1 || ua.indexOf("qzone") !== -1 || ua.indexOf("x5") !== -1 || ua.indexOf("tbs") !== -1;
             if (!isQQLike) return;
             window.__fireflyQQWallpaperPatch = true;
+
+            function pickSrc() {
+                var wrap = document.getElementById("wallpaper-wrapper");
+                if (!wrap) return "";
+                var imgs = wrap.querySelectorAll("img");
+                for (var i = 0; i < imgs.length; i++) {
+                    var v = imgs[i].currentSrc || imgs[i].src || "";
+                    if (v) return v;
+                }
+                var sources = wrap.querySelectorAll("source[srcset]");
+                for (var k = 0; k < sources.length; k++) {
+                    var s = (sources[k].getAttribute("srcset") || "").split(",")[0].trim().split(" ")[0];
+                    if (s) return s;
+                }
+                return "";
+            }
 
             function apply() {
                 var wrap = document.getElementById("wallpaper-wrapper");
                 if (!wrap) return;
-                var imgs = wrap.querySelectorAll("img");
-                var hit = null;
-                for (var i = 0; i < imgs.length; i++) {
-                    var src = imgs[i].currentSrc || imgs[i].src || "";
-                    if (src && imgs[i].naturalWidth > 0) { hit = imgs[i]; break; }
-                }
-                if (!hit) return;
-                wrap.style.backgroundImage = 'url("' + (hit.currentSrc || hit.src) + '")';
+                var src = pickSrc();
+                if (!src) return;
+                wrap.style.backgroundImage = 'url("' + src + '")';
                 wrap.style.backgroundSize = "auto 100%";
                 wrap.style.backgroundPosition = "center center";
                 wrap.style.backgroundRepeat = "no-repeat";
-                hit.style.display = "none";
+                var imgs = wrap.querySelectorAll("img");
+                for (var i = 0; i < imgs.length; i++) imgs[i].style.display = "none";
                 var phs = wrap.querySelectorAll(".lqip-placeholder");
                 for (var j = 0; j < phs.length; j++) phs[j].style.display = "none";
             }
 
+            apply();
             if (document.readyState === "loading") {
                 document.addEventListener("DOMContentLoaded", apply);
-            } else {
-                apply();
             }
             window.addEventListener("load", apply);
-            setTimeout(apply, 400);
-            setTimeout(apply, 1200);
+            document.addEventListener("pageshow", apply);
+            setTimeout(apply, 300);
+            setTimeout(apply, 800);
+            setTimeout(apply, 2000);
+            if (window.swup && window.swup.hooks) {
+                window.swup.hooks.on("content:replace", apply);
+            } else {
+                document.addEventListener("swup:contentReplaced", apply);
+            }
         })();
     </script>
 
