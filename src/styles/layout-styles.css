@@ -697,12 +697,6 @@ html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper {
 /* 首帧即让图片全屏覆盖并居中（镜像 wallpaper-fullscreen 类的 img 规则）：
    避免类晚加时图片按自然尺寸渲染（比视口宽、靠左）后闪到居中的位移 */
 html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper img {
-    display: block !important;
-    position: absolute !important;
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
@@ -710,84 +704,6 @@ html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper img {
     filter: blur(var(--fullscreen-blur, var(--overlay-blur, 0px))) !important;
     transform: scale(1.05);
     opacity: 1 !important;
-}
-
-/* Astro Picture 会在 img 外生成内联 picture。部分内置 WebView（如 QQ）
-   不会把 img 的百分比高度穿透该内联层，导致图片按固有比例显示并在下方留白。 */
-html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper picture,
-#wallpaper-wrapper.wallpaper-fullscreen picture {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* ============================================
- * QQ / X5 / TBS 内置 WebView 专用覆盖（html.qq-wp）
- * 旧内核下 position:fixed 的高度用 top/bottom 拉伸，不用 vh/lvh；
- * 图片按原比例高度铺满容器、宽度等比放大、水平居中，左右溢出裁掉。
- * ============================================ */
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper,
-html.qq-wp #wallpaper-wrapper.wallpaper-fullscreen {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: auto !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    transform: none !important;
-    overflow: hidden !important;
-    z-index: var(--overlay-z-index, -1) !important;
-    opacity: 1 !important;
-    pointer-events: none !important;
-    display: block !important;
-}
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper .banner-image-slot,
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper .slide-item {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: auto !important;
-    height: auto !important;
-    overflow: hidden !important;
-}
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper picture {
-    display: block !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: auto !important;
-    height: auto !important;
-    overflow: hidden !important;
-}
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper picture img,
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper img {
-    display: block !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 50% !important;
-    right: auto !important;
-    bottom: auto !important;
-    width: auto !important;
-    height: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    transform: translateX(-50%) !important;
-    object-fit: fill !important;
-    object-position: center center !important;
-    filter: none !important;
-    opacity: 1 !important;
-}
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper .lqip-placeholder,
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper .banner-image-slot .transition,
-html.qq-wp[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper .slide-item .transition {
-    display: none !important;
 }
 
 /* fullscreen 非首页：隐藏横幅标题/元信息覆盖层（镜像 wallpaper-fullscreen 类规则） */
@@ -815,12 +731,6 @@ html[data-wallpaper-mode="fullscreen"] body.is-home:not(.sticky-navbar):not(.dyn
    非首页的 filter fallback 到 --overlay-blur，避免壁纸显示后等 JS 设置 --fullscreen-blur 才模糊 */
 #wallpaper-wrapper.wallpaper-fullscreen img,
 #wallpaper-wrapper.wallpaper-fullscreen img[class*="object-cover"] {
-    display: block !important;
-    position: absolute !important;
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
