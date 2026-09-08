@@ -697,6 +697,12 @@ html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper {
 /* 首帧即让图片全屏覆盖并居中（镜像 wallpaper-fullscreen 类的 img 规则）：
    避免类晚加时图片按自然尺寸渲染（比视口宽、靠左）后闪到居中的位移 */
 html[data-wallpaper-mode="fullscreen"] #wallpaper-wrapper img {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
@@ -740,6 +746,12 @@ html[data-wallpaper-mode="fullscreen"] body.is-home:not(.sticky-navbar):not(.dyn
    非首页的 filter fallback 到 --overlay-blur，避免壁纸显示后等 JS 设置 --fullscreen-blur 才模糊 */
 #wallpaper-wrapper.wallpaper-fullscreen img,
 #wallpaper-wrapper.wallpaper-fullscreen img[class*="object-cover"] {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
