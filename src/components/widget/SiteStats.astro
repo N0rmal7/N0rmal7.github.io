@@ -143,16 +143,28 @@ const stats = [
   function loadBusuanzi() {
     if (window.__busuanziLoaded) return;
     window.__busuanziLoaded = true;
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
-    script.onload = function () {
+    function syncBusuanziValues() {
       const uv = document.getElementById("busuanzi_value_site_uv");
       const pv = document.getElementById("busuanzi_value_site_pv");
       const uvValue = document.querySelector('[data-stat-id="site-uv"]');
       const pvValue = document.querySelector('[data-stat-id="site-pv"]');
-      if (uvValue && uv) uvValue.textContent = uv.textContent || "—";
-      if (pvValue && pv) pvValue.textContent = pv.textContent || "—";
+      const uvText = uv?.textContent?.trim() || "";
+      const pvText = pv?.textContent?.trim() || "";
+      if (uvValue && uvText) uvValue.textContent = uvText;
+      if (pvValue && pvText) pvValue.textContent = pvText;
+      return Boolean(uvText && pvText);
+    }
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
+    script.onload = function () {
+      let attempts = 0;
+      const timer = window.setInterval(() => {
+        attempts += 1;
+        if (syncBusuanziValues() || attempts >= 20) {
+          window.clearInterval(timer);
+        }
+      }, 500);
     };
     document.head.appendChild(script);
   }
