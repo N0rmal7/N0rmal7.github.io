@@ -6,9 +6,7 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import type { WidgetComponentConfig } from "@/types/config";
 import {
-	getCategoryList,
 	getSortedPosts,
-	getTagList,
 } from "@/utils/content-utils";
 
 interface Props {
@@ -26,8 +24,6 @@ const siteStartDate = siteConfig.siteStartDate || "2025-01-01";
 
 // 获取所有文章
 const posts = await getSortedPosts();
-const categories = await getCategoryList();
-const tags = await getTagList();
 
 // 计算总字数
 let totalWords = 0;
@@ -77,14 +73,16 @@ const stats = [
 		value: posts.length,
 	},
 	{
-		icon: "material-symbols:folder-outline",
-		label: i18n(I18nKey.siteStatsCategoryCount),
-		value: categories.length,
+		icon: "material-symbols:group-outline",
+		label: "访客数",
+		value: "—",
+		id: "site-uv",
 	},
 	{
-		icon: "material-symbols:label-outline",
-		label: i18n(I18nKey.siteStatsTagCount),
-		value: tags.length,
+		icon: "material-symbols:visibility-outline",
+		label: "总浏览量",
+		value: "—",
+		id: "site-pv",
 	},
 	{
 		icon: "material-symbols:text-ad-outline-rounded",
@@ -128,7 +126,7 @@ const stats = [
             class="text-base font-bold text-neutral-900 dark:text-neutral-100"
             data-stat-id={stat.id}
           >
-            {stat.formatted ? formatNumber(stat.value) : stat.value}
+							{typeof stat.value === "number" && stat.formatted ? formatNumber(stat.value) : stat.value}
           </span>
           {stat.suffix && (
             <span class="ml-1 text-sm text-neutral-500 dark:text-neutral-400">
@@ -142,6 +140,30 @@ const stats = [
 </WidgetLayout>
 
 <script is:inline define:vars={{ siteStartDate, lastPostDate, todayText }}>
+  function loadBusuanzi() {
+    if (window.__busuanziLoaded) return;
+    window.__busuanziLoaded = true;
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
+    script.onload = function () {
+      const uv = document.getElementById("busuanzi_value_site_uv");
+      const pv = document.getElementById("busuanzi_value_site_pv");
+      const uvValue = document.querySelector('[data-stat-id="site-uv"]');
+      const pvValue = document.querySelector('[data-stat-id="site-pv"]');
+      if (uvValue && uv) uvValue.textContent = uv.textContent || "—";
+      if (pvValue && pv) pvValue.textContent = pv.textContent || "—";
+    };
+    document.head.appendChild(script);
+  }
+
+  // 隐藏的 Busuanzi 计数节点：脚本加载后将数值同步到统计卡片。
+  const busuanziHost = document.createElement("div");
+  busuanziHost.style.display = "none";
+  busuanziHost.innerHTML = '<span id="busuanzi_value_site_uv"></span><span id="busuanzi_value_site_pv"></span>';
+  document.body.appendChild(busuanziHost);
+  loadBusuanzi();
+
   function updateDynamicStats() {
     const today = new Date();
 
