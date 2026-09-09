@@ -24,16 +24,16 @@ export const friendsPageConfig: FriendsPageConfig = {
 export const friendsConfig: FriendLink[] = [
 	{
 		title: "mm9527",
-		imgurl: "https://mm9527.top/favicon.ico",
+		imgurl: "https://www.mm9527.top/images/avatar.png",
 		desc: "逆向工程与二进制安全，记录 CTF 题解、逆向分析和学习笔记。",
 		siteurl: "https://mm9527.top/",
-		tags: ["Reverse", "Pwn", "CTF"],
+		tags: ["Reverse", "CTF"],
 		weight: 10,
 		enabled: true,
 	},
 	{
 		title: "lily2663",
-		imgurl: "https://lily2663.top/favicon.ico",
+		imgurl: "https://lily2663.top/assets/img/optimized/b_d06ff1a0814bc6d063e847e30ce0fd8b.webp",
 		desc: "记录 Web 安全、CTF 和技术学习的博客。",
 		siteurl: "https://lily2663.top/",
 		tags: ["Web", "CTF"],
