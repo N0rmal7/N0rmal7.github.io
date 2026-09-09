@@ -40,6 +40,15 @@ export const friendsConfig: FriendLink[] = [
 		weight: 10,
 		enabled: true,
 	},
+	{
+		title: "NSSCTF",
+		imgurl: "https://www.nssctf.cn/favicon.ico",
+		desc: "在线 CTF 学习与竞赛平台。",
+		siteurl: "https://www.nssctf.cn/",
+		tags: ["CTF"],
+		weight: 10,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
