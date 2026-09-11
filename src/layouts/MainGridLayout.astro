@@ -1,7 +1,5 @@
 ---
-import Live2DWidget from "@components/features/Live2DWidget.astro";
-
-import SpineModel from "@components/features/SpineModel.astro";
+import YukiMascot from "@components/features/YukiMascot.astro";
 import Footer from "@components/layout/Footer.astro";
 import HeaderTopRow from "@components/layout/HeaderTopRow.astro";
 import NavMenuPanel from "@components/layout/NavMenuPanel.astro";
@@ -11,12 +9,7 @@ import FloatingControls from "@/components/controls/FloatingControls.astro";
 import CategoryBar from "@/components/layout/CategoryBar.astro";
 import SidebarColumn from "@/components/layout/SidebarColumn.astro";
 import WallpaperSection from "@/components/layout/WallpaperSection.astro";
-import {
-	live2dWidgetConfig,
-	navbarMode,
-	sidebarLayoutConfig,
-	siteConfig,
-} from "@/config";
+import { navbarMode, sidebarLayoutConfig, siteConfig } from "@/config";
 import { getBannerVisibilityState } from "@/utils/banner-visibility-utils";
 import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
 import { resolveNavMenuLinks } from "@/utils/nav-menu-utils";
@@ -174,8 +167,7 @@ const {
             </div>
         </div>
 
-        <SpineModel></SpineModel>
-        {live2dWidgetConfig.enable && <Live2DWidget config={live2dWidgetConfig} />}
+        <YukiMascot></YukiMascot>
     </div>
 </div>
 

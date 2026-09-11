@@ -1,0 +1,130 @@
+{
+  "formA": {
+    "click": [
+      {
+        "file": "voices/formA/nagato-24.wav",
+        "seconds": 0.789
+      },
+      {
+        "file": "voices/formA/nagato-25.wav",
+        "seconds": 1.068
+      },
+      {
+        "file": "voices/formA/nagato-26.wav",
+        "seconds": 1.347
+      },
+      {
+        "file": "voices/formA/nagato-27.wav",
+        "seconds": 1.022
+      },
+      {
+        "file": "voices/formA/nagato-28.wav",
+        "seconds": 0.906
+      },
+      {
+        "file": "voices/formA/nagato-29.wav",
+        "seconds": 0.998
+      },
+      {
+        "file": "voices/formA/nagato-30.wav",
+        "seconds": 2.554
+      },
+      {
+        "file": "voices/formA/nagato-31.wav",
+        "seconds": 0.766
+      },
+      {
+        "file": "voices/formA/nagato-33.wav",
+        "seconds": 2.229
+      }
+    ],
+    "drag": [
+      {
+        "file": "voices/formA/nagato-34.wav",
+        "seconds": 2.972
+      },
+      {
+        "file": "voices/formA/nagato-35.wav",
+        "seconds": 1.741
+      },
+      {
+        "file": "voices/formA/nagato-37.wav",
+        "seconds": 1.138
+      },
+      {
+        "file": "voices/formA/nagato-39.wav",
+        "seconds": 1.393
+      },
+      {
+        "file": "voices/formA/nagato-40.wav",
+        "seconds": 4.063
+      },
+      {
+        "file": "voices/formA/nagato-42.wav",
+        "seconds": 2.601
+      }
+    ]
+  },
+  "formB": {
+    "click": [
+      {
+        "file": "voices/formB/nagato-72.wav",
+        "seconds": 1.184
+      },
+      {
+        "file": "voices/formB/nagato-73.wav",
+        "seconds": 0.859
+      },
+      {
+        "file": "voices/formB/nagato-74.wav",
+        "seconds": 1.44
+      },
+      {
+        "file": "voices/formB/nagato-75.wav",
+        "seconds": 0.859
+      },
+      {
+        "file": "voices/formB/nagato-77.wav",
+        "seconds": 3.669
+      },
+      {
+        "file": "voices/formB/nagato-78.wav",
+        "seconds": 1.858
+      },
+      {
+        "file": "voices/formB/nagato-79.wav",
+        "seconds": 1.161
+      }
+    ],
+    "drag": [
+      {
+        "file": "voices/formB/nagato-81.wav",
+        "seconds": 1.393
+      },
+      {
+        "file": "voices/formB/nagato-83.wav",
+        "seconds": 1.091
+      },
+      {
+        "file": "voices/formB/nagato-84.wav",
+        "seconds": 2.345
+      },
+      {
+        "file": "voices/formB/nagato-85.wav",
+        "seconds": 0.929
+      },
+      {
+        "file": "voices/formB/nagato-86.wav",
+        "seconds": 1.788
+      },
+      {
+        "file": "voices/formB/nagato-87.wav",
+        "seconds": 1.254
+      },
+      {
+        "file": "voices/formB/nagato-89.wav",
+        "seconds": 3.413
+      }
+    ]
+  }
+}

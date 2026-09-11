@@ -375,6 +375,14 @@ enum I18nKey {
 	settingsTabAppearance = "settingsTabAppearance",
 	settingsTabWallpaper = "settingsTabWallpaper",
 	settingsTabEffects = "settingsTabEffects",
+	settingsTabMascot = "settingsTabMascot",
+
+	// 看板娘设置
+	mascotSettings = "mascotSettings",
+	mascotEnable = "mascotEnable",
+	mascotForm = "mascotForm",
+	mascotFormNormal = "mascotFormNormal",
+	mascotFormChanged = "mascotFormChanged",
 
 	// 卡片样式
 	cardSettings = "cardSettings",

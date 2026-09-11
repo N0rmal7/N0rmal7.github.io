@@ -386,6 +386,12 @@ export const ja: Translation = {
 	[Key.settingsTabAppearance]: "外観",
 	[Key.settingsTabWallpaper]: "壁紙",
 	[Key.settingsTabEffects]: "エフェクト",
+	[Key.settingsTabMascot]: "マスコット",
+	[Key.mascotSettings]: "マスコット設定",
+	[Key.mascotEnable]: "マスコットを表示",
+	[Key.mascotForm]: "フォーム切替",
+	[Key.mascotFormNormal]: "通常",
+	[Key.mascotFormChanged]: "変身",
 
 	// カードスタイル
 	[Key.cardSettings]: "カードスタイル",

@@ -389,6 +389,12 @@ export const ru: Translation = {
 	[Key.settingsTabAppearance]: "Оформление",
 	[Key.settingsTabWallpaper]: "Обои",
 	[Key.settingsTabEffects]: "Эффекты",
+	[Key.settingsTabMascot]: "Маскот",
+	[Key.mascotSettings]: "Настройки маскота",
+	[Key.mascotEnable]: "Показывать маскота",
+	[Key.mascotForm]: "Смена формы",
+	[Key.mascotFormNormal]: "Обычная",
+	[Key.mascotFormChanged]: "Изменённая",
 
 	// Стиль карточек
 	[Key.cardSettings]: "Стиль карточек",

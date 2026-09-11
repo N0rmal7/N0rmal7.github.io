@@ -19,6 +19,7 @@ import {
 	expressiveCodeConfig,
 	sakuraConfig,
 	siteConfig,
+	yukiMascotConfig,
 } from "../config";
 import { isHomePage as checkIsHomePage } from "./layout-utils";
 
@@ -810,9 +811,67 @@ export function setSakuraEnabled(enabled: boolean): void {
 	);
 }
 
+// Mascot (Yuki) functions
+export function getDefaultMascotEnabled(): boolean {
+	return yukiMascotConfig?.enable ?? false;
+}
+
+export function getStoredMascotEnabled(): boolean {
+	if (typeof localStorage === "undefined") {
+		return getDefaultMascotEnabled();
+	}
+	const stored = localStorage.getItem("mascotEnabled");
+	if (stored === null) {
+		return getDefaultMascotEnabled();
+	}
+	return stored === "true";
+}
+
+export function setMascotEnabled(enabled: boolean): void {
+	if (
+		typeof localStorage === "undefined" ||
+		typeof localStorage.setItem !== "function"
+	) {
+		return;
+	}
+	localStorage.setItem("mascotEnabled", String(enabled));
+	document.documentElement.setAttribute("data-mascot-enabled", String(enabled));
+	window.dispatchEvent(
+		new CustomEvent("mascotToggle", { detail: { enabled } }),
+	);
+}
+
+export function getDefaultMascotForm(): "A" | "B" {
+	return yukiMascotConfig?.defaultForm === "B" ? "B" : "A";
+}
+
+export function getStoredMascotForm(): "A" | "B" {
+	if (typeof localStorage === "undefined") {
+		return getDefaultMascotForm();
+	}
+	const stored = localStorage.getItem("mascotForm");
+	if (stored === "A" || stored === "B") {
+		return stored;
+	}
+	return getDefaultMascotForm();
+}
+
+export function setMascotForm(form: "A" | "B"): void {
+	if (
+		typeof localStorage === "undefined" ||
+		typeof localStorage.setItem !== "function"
+	) {
+		return;
+	}
+	localStorage.setItem("mascotForm", form);
+	window.dispatchEvent(
+		new CustomEvent("mascotFormChange", { detail: { form } }),
+	);
+}
+
 // Banner title functions
 export function getDefaultBannerTitleEnabled(): boolean {
-	return backgroundWallpaper.common?.homeText?.enable ?? true;
+	return backgroundWallpaper.common?.homeText?.enable ?? false;
 }
 
 export function getDefaultBannerCarouselEnabled(): boolean {

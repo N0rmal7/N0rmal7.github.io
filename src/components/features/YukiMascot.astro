@@ -1,0 +1,362 @@
+---
+import { yukiMascotConfig } from "@/config/pioConfig";
+import { url } from "@/utils/url-utils";
+
+// 长门有希桌宠：从 MascotYuki.exe 逆向提取的双形态序列帧。
+// 形态 A（普通，不戴眼镜）/ 形态 B（戴眼镜、抱书）；鼠标悬停、单击、拖动分别对应
+// 原程序的不同动作与语音。资源目录见 yukiMascotConfig.basePath。
+const cfg = yukiMascotConfig;
+const base = url(cfg.basePath);
+const corner = cfg.position?.corner || "bottom-left";
+---
+
+{
+  cfg.enable && (
+    <div
+      id="yuki-mascot"
+      style={`
+        position: fixed;
+        ${corner.includes("right") ? "right" : "left"}: ${cfg.position?.offsetX ?? 0}px;
+        bottom: ${cfg.position?.offsetY ?? 0}px;
+        width: ${cfg.size?.width ?? 160}px;
+        height: ${cfg.size?.height ?? 160}px;
+        z-index: ${cfg.zIndex ?? 1000};
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+      `}
+      aria-label="长门有希桌宠"
+      role="button"
+      tabindex="0"
+    >
+      <div id="yuki-mascot-player" style="width: 100%; height: 100%;" />
+    </div>
+  )
+}
+
+{
+  cfg.enable && (
+    <script
+      is:inline
+      define:vars={{
+        base,
+        jsPath: url("/yuki/vendor/spine-player.min.js"),
+        cssPath: url("/yuki/vendor/spine-player.min.css"),
+        volume: cfg.volume ?? 0.6,
+        defaultForm: cfg.defaultForm ?? "A",
+        responsive: cfg.responsive ?? {},
+      }}
+    >
+      (() => {
+        const container = document.getElementById("yuki-mascot");
+        if (!container) return;
+
+        // 移动端隐藏
+        if (
+          responsive.hideOnMobile &&
+          window.innerWidth <= (responsive.mobileBreakpoint || 768)
+        ) {
+          container.style.display = "none";
+          return;
+        }
+
+        // 动态加载 Spine 运行时（本地优先，失败再回退 CDN）
+        function ensureRuntime() {
+          return new Promise((resolve, reject) => {
+            if (window.spine && window.spine.SpinePlayer) return resolve();
+            const local = document.createElement("script");
+            local.src = jsPath;
+            local.onload = () => resolve();
+            local.onerror = () => {
+              const cdn = document.createElement("script");
+              cdn.src =
+                "https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.min.js";
+              cdn.onload = () => resolve();
+              cdn.onerror = () => reject(new Error("Spine runtime load failed"));
+              document.head.appendChild(cdn);
+            };
+            document.head.appendChild(local);
+          });
+        }
+
+        if (!document.querySelector('link[data-yuki-spine]')) {
+          const css = document.createElement("link");
+          css.rel = "stylesheet";
+          css.href = cssPath;
+          css.dataset.yukiSpine = "1";
+          document.head.appendChild(css);
+        }
+
+        const voiceCache = {};
+        let lastVoiceAt = 0;
+        const VOICE_COOLDOWN = 3000; // at most one voice per 3s
+        function playVoice(pool, name) {
+          if (!name) return;
+          const now = Date.now();
+          if (now - lastVoiceAt < VOICE_COOLDOWN) return;
+          lastVoiceAt = now;
+          const src = `${base}/voices/${pool}/${name}`;
+          const audio = voiceCache[src] || (voiceCache[src] = new Audio(src));
+          audio.volume = volume;
+          try {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+          } catch (e) {}
+        }
+
+        let pools = { formA: { click: [], drag: [] }, formB: { click: [], drag: [] } };
+        let current = defaultForm === "B" ? "B" : "A";
+        let player = null;
+        let hovered = false;
+        let dragging = false;
+        let movedDuringDrag = false;
+        let aIntroTimer = null;
+
+        // Draggable position (left/top in viewport px).
+        let posX = 0;
+        let posY = 0;
+        let pressX = 0;
+        let pressY = 0;
+        let baseLeft = 0;
+        let baseTop = 0;
+        const DRAG_THRESHOLD = 4; // px before a press counts as a drag
+
+        function normalizePosition() {
+          const r = container.getBoundingClientRect();
+          posX = r.left;
+          posY = r.top;
+          container.style.left = `${posX}px`;
+          container.style.top = `${posY}px`;
+          container.style.right = "auto";
+          container.style.bottom = "auto";
+          container.style.margin = "0";
+        }
+
+        function moveTo(x, y) {
+          const w = container.offsetWidth;
+          const h = container.offsetHeight;
+          const maxX = Math.max(0, window.innerWidth - w);
+          const maxY = Math.max(0, window.innerHeight - h);
+          posX = Math.min(Math.max(0, x), maxX);
+          posY = Math.min(Math.max(0, y), maxY);
+          container.style.left = `${posX}px`;
+          container.style.top = `${posY}px`;
+        }
+
+        const poolKey = () => (current === "A" ? "formA" : "formB");
+        const pick = (kind) => {
+          const list = pools[poolKey()][kind];
+          if (!list || !list.length) return null;
+          const entry = list[Math.floor(Math.random() * list.length)];
+          const file = typeof entry === "string" ? entry : entry.file;
+          return file ? file.split("/").pop() : null;
+        };
+        function pickVoice(kind) {
+          try {
+            playVoice(poolKey(), pick(kind));
+          } catch (e) {
+            console.warn("[yuki-mascot] voice error:", e);
+          }
+        }
+        const anim = (name, loop) => {
+          if (player) {
+            try {
+              player.setAnimation(name, loop !== false);
+              window.__yukiAnim = name;
+            } catch (e) {}
+          }
+        };
+
+        function cancelIntro() {
+          if (aIntroTimer) {
+            clearTimeout(aIntroTimer);
+            aIntroTimer = null;
+          }
+        }
+
+        function playIntroThenBlink() {
+          anim("clickA", false);
+          cancelIntro();
+          aIntroTimer = setTimeout(() => {
+            aIntroTimer = null;
+            if (current === "A" && hovered && !dragging && !movedDuringDrag) {
+              anim("hoverA", true);
+            }
+          }, 640);
+        }
+
+        function showIdle() {
+          if (current === "B") {
+            anim(hovered ? "idleB" : "hoverB", true);
+            return;
+          }
+          if (dragging) return;
+          if (aIntroTimer) {
+            clearTimeout(aIntroTimer);
+            aIntroTimer = null;
+          }
+          if (hovered) playIntroThenBlink();
+          else anim("idleA", true);
+        }
+
+        function setForm(form, playVoiceOnSwitch) {
+          current = form;
+          hovered = false;
+          dragging = false;
+          cancelIntro();
+          if (playVoiceOnSwitch) playVoice(poolKey(), pick("click"));
+          showIdle();
+        }
+
+        function bindInput() {
+          normalizePosition();
+          container.addEventListener("pointerenter", () => {
+            hovered = true;
+            if (!dragging) showIdle();
+          });
+          container.addEventListener("pointerleave", () => {
+            hovered = false;
+            if (!dragging) showIdle();
+          });
+          container.addEventListener("pointerdown", (e) => {
+            dragging = true;
+            movedDuringDrag = false;
+            pressX = e.clientX;
+            pressY = e.clientY;
+            baseLeft = posX;
+            baseTop = posY;
+            try {
+              container.setPointerCapture(e.pointerId);
+            } catch (err) {}
+            // No voice here: click voice plays on release, drag voice on move,
+            // so a drag does not stack the click voice on top of the drag voice.
+            // Form B stays on its hover sprite while held (press != un-hover).
+            if (current === "A") playIntroThenBlink();
+            else showIdle();
+          });
+          container.addEventListener("pointermove", (e) => {
+            if (!dragging) return;
+            const dx = e.clientX - pressX;
+            const dy = e.clientY - pressY;
+            if (!movedDuringDrag && Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+              movedDuringDrag = true;
+              cancelIntro();
+              anim(current === "A" ? "dragA" : "dragB", true);
+              // One drag voice per drag gesture (no repeating during the hold).
+              pickVoice("drag");
+            }
+            if (movedDuringDrag) moveTo(baseLeft + dx, baseTop + dy);
+          });
+          function endDrag() {
+            if (!dragging) return;
+            dragging = false;
+            // Pure click (no movement): play the click voice on release.
+            if (!movedDuringDrag) pickVoice("click");
+            movedDuringDrag = false;
+            showIdle();
+          }
+          container.addEventListener("pointerup", endDrag);
+          container.addEventListener("pointercancel", endDrag);
+          container.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              playVoice(poolKey(), pick("click"));
+              if (current === "A") playIntroThenBlink();
+            }
+          });
+        }
+
+        // Runtime visibility + form control driven by the settings panel.
+        function applyEnabled(enabled) {
+          container.style.display = enabled ? "" : "none";
+          if (enabled) {
+            if (!window.__yukiStarted) {
+              window.__yukiStarted = true;
+              init();
+            }
+          }
+        }
+
+        // Settings panel events
+        window.addEventListener("mascotToggle", (e) => {
+          const enabled = !!(e && e.detail && e.detail.enabled);
+          applyEnabled(enabled);
+        });
+        window.addEventListener("mascotFormChange", (e) => {
+          const form = e && e.detail && e.detail.form === "B" ? "B" : "A";
+          setForm(form, false);
+        });
+
+        async function init() {
+          try {
+            await ensureRuntime();
+          } catch (e) {
+            return;
+          }
+          // 语音池清单
+          try {
+            const res = await fetch(`${base}/voices.json`);
+            if (res.ok) pools = await res.json();
+          } catch (e) {}
+
+          player = new window.spine.SpinePlayer("yuki-mascot-player", {
+            skeleton: `${base}/yuki.json`,
+            atlas: `${base}/yuki.atlas`,
+            animation: current === "A" ? "idleA" : "idleB",
+            alpha: true,
+            backgroundColor: "#00000000",
+            premultipliedAlpha: false,
+            showControls: false,
+            mipmaps: false,
+            viewport: {
+              x: -48,
+              y: -48,
+              width: 96,
+              height: 96,
+              padLeft: 0,
+              padRight: 0,
+              padTop: 0,
+              padBottom: 0,
+            },
+            success: () => {
+              anim(current === "A" ? "idleA" : "idleB", true);
+              bindInput();
+            },
+            error: (_p, reason) => {
+              console.warn("[yuki-mascot] load failed:", reason);
+            },
+          });
+        }
+
+        // Resolve initial state from localStorage (settings panel), falling back
+        // to the build-time config.
+        function readEnabled() {
+          try {
+            const v = localStorage.getItem("mascotEnabled");
+            if (v === "true") return true;
+            if (v === "false") return false;
+          } catch (e) {}
+          return true;
+        }
+        function readForm() {
+          try {
+            const v = localStorage.getItem("mascotForm");
+            if (v === "A" || v === "B") return v;
+          } catch (e) {}
+          return defaultForm === "B" ? "B" : "A";
+        }
+
+        current = readForm();
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () => {
+            applyEnabled(readEnabled());
+          });
+        } else {
+          applyEnabled(readEnabled());
+        }
+      })();
+    </script>
+  )
+}

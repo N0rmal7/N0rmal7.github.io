@@ -386,6 +386,12 @@ export const ko: Translation = {
 	[Key.settingsTabAppearance]: "외형",
 	[Key.settingsTabWallpaper]: "배경화면",
 	[Key.settingsTabEffects]: "효과",
+	[Key.settingsTabMascot]: "마스코트",
+	[Key.mascotSettings]: "마스코트 설정",
+	[Key.mascotEnable]: "마스코트 표시",
+	[Key.mascotForm]: "형태 전환",
+	[Key.mascotFormNormal]: "일반",
+	[Key.mascotFormChanged]: "변신",
 
 	// 카드 스타일
 	[Key.cardSettings]: "카드 스타일",

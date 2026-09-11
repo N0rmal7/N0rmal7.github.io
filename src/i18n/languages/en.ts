@@ -388,6 +388,12 @@ export const en: Translation = {
 	[Key.settingsTabAppearance]: "Appearance",
 	[Key.settingsTabWallpaper]: "Wallpaper",
 	[Key.settingsTabEffects]: "Effects",
+	[Key.settingsTabMascot]: "Mascot",
+	[Key.mascotSettings]: "Mascot Settings",
+	[Key.mascotEnable]: "Enable Mascot",
+	[Key.mascotForm]: "Mascot Form",
+	[Key.mascotFormNormal]: "Normal",
+	[Key.mascotFormChanged]: "Changed",
 
 	// Card Style
 	[Key.cardSettings]: "Card Style",

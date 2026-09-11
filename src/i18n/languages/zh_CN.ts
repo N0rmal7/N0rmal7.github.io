@@ -379,6 +379,12 @@ export const zh_CN: Translation = {
 	[Key.settingsTabAppearance]: "外观",
 	[Key.settingsTabWallpaper]: "壁纸",
 	[Key.settingsTabEffects]: "特效",
+	[Key.settingsTabMascot]: "看板娘",
+	[Key.mascotSettings]: "看板娘设置",
+	[Key.mascotEnable]: "开启看板娘",
+	[Key.mascotForm]: "切换形态",
+	[Key.mascotFormNormal]: "普通形态",
+	[Key.mascotFormChanged]: "变身形态",
 
 	// 卡片样式
 	[Key.cardSettings]: "卡片样式",

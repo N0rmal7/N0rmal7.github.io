@@ -1,0 +1,490 @@
+{
+  "skeleton": {
+    "spine": "4.2.0",
+    "x": -48,
+    "y": -48,
+    "width": 96,
+    "height": 96
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "sprite",
+      "bone": "root",
+      "attachment": "A000"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "sprite": {
+          "A000": {
+            "type": "region",
+            "path": "A000",
+            "width": 96,
+            "height": 96
+          },
+          "A001": {
+            "type": "region",
+            "path": "A001",
+            "width": 96,
+            "height": 96
+          },
+          "A002": {
+            "type": "region",
+            "path": "A002",
+            "width": 96,
+            "height": 96
+          },
+          "A003": {
+            "type": "region",
+            "path": "A003",
+            "width": 96,
+            "height": 96
+          },
+          "A004": {
+            "type": "region",
+            "path": "A004",
+            "width": 96,
+            "height": 96
+          },
+          "A005": {
+            "type": "region",
+            "path": "A005",
+            "width": 96,
+            "height": 96
+          },
+          "B010": {
+            "type": "region",
+            "path": "B010",
+            "width": 96,
+            "height": 96
+          },
+          "B011": {
+            "type": "region",
+            "path": "B011",
+            "width": 96,
+            "height": 96
+          },
+          "B012": {
+            "type": "region",
+            "path": "B012",
+            "width": 96,
+            "height": 96
+          },
+          "B013": {
+            "type": "region",
+            "path": "B013",
+            "width": 96,
+            "height": 96
+          },
+          "B014": {
+            "type": "region",
+            "path": "B014",
+            "width": 96,
+            "height": 96
+          },
+          "B015": {
+            "type": "region",
+            "path": "B015",
+            "width": 96,
+            "height": 96
+          },
+          "B016": {
+            "type": "region",
+            "path": "B016",
+            "width": 96,
+            "height": 96
+          },
+          "B017": {
+            "type": "region",
+            "path": "B017",
+            "width": 96,
+            "height": 96
+          },
+          "B018": {
+            "type": "region",
+            "path": "B018",
+            "width": 96,
+            "height": 96
+          },
+          "B019": {
+            "type": "region",
+            "path": "B019",
+            "width": 96,
+            "height": 96
+          },
+          "B020": {
+            "type": "region",
+            "path": "B020",
+            "width": 96,
+            "height": 96
+          },
+          "B021": {
+            "type": "region",
+            "path": "B021",
+            "width": 96,
+            "height": 96
+          },
+          "B026": {
+            "type": "region",
+            "path": "B026",
+            "width": 96,
+            "height": 96
+          },
+          "B027": {
+            "type": "region",
+            "path": "B027",
+            "width": 96,
+            "height": 96
+          },
+          "B028": {
+            "type": "region",
+            "path": "B028",
+            "width": 96,
+            "height": 96
+          },
+          "B029": {
+            "type": "region",
+            "path": "B029",
+            "width": 96,
+            "height": 96
+          },
+          "B030": {
+            "type": "region",
+            "path": "B030",
+            "width": 96,
+            "height": 96
+          },
+          "B031": {
+            "type": "region",
+            "path": "B031",
+            "width": 96,
+            "height": 96
+          },
+          "B032": {
+            "type": "region",
+            "path": "B032",
+            "width": 96,
+            "height": 96
+          },
+          "B033": {
+            "type": "region",
+            "path": "B033",
+            "width": 96,
+            "height": 96
+          },
+          "B034": {
+            "type": "region",
+            "path": "B034",
+            "width": 96,
+            "height": 96
+          },
+          "B035": {
+            "type": "region",
+            "path": "B035",
+            "width": 96,
+            "height": 96
+          },
+          "A012": {
+            "type": "region",
+            "path": "A012",
+            "width": 96,
+            "height": 96
+          },
+          "A013": {
+            "type": "region",
+            "path": "A013",
+            "width": 96,
+            "height": 96
+          },
+          "A014": {
+            "type": "region",
+            "path": "A014",
+            "width": 96,
+            "height": 96
+          },
+          "A015": {
+            "type": "region",
+            "path": "A015",
+            "width": 96,
+            "height": 96
+          },
+          "A016": {
+            "type": "region",
+            "path": "A016",
+            "width": 96,
+            "height": 96
+          },
+          "A017": {
+            "type": "region",
+            "path": "A017",
+            "width": 96,
+            "height": 96
+          },
+          "A018": {
+            "type": "region",
+            "path": "A018",
+            "width": 96,
+            "height": 96
+          }
+        }
+      }
+    }
+  ],
+  "animations": {
+    "idleA": {
+      "slots": {
+        "sprite": {
+          "attachment": [
+            {
+              "time": 0.0,
+              "name": "A000"
+            },
+            {
+              "time": 0.134,
+              "name": "A001"
+            },
+            {
+              "time": 0.268,
+              "name": "A002"
+            },
+            {
+              "time": 0.402,
+              "name": "A003"
+            },
+            {
+              "time": 0.536,
+              "name": "A004"
+            },
+            {
+              "time": 0.67,
+              "name": "A005"
+            },
+            {
+              "time": 0.804,
+              "name": "A000"
+            }
+          ]
+        }
+      }
+    },
+    "idleB": {
+      "slots": {
+        "sprite": {
+          "attachment": [
+            {
+              "time": 0.0,
+              "name": "B010"
+            },
+            {
+              "time": 0.134,
+              "name": "B011"
+            },
+            {
+              "time": 0.268,
+              "name": "B012"
+            },
+            {
+              "time": 0.402,
+              "name": "B013"
+            },
+            {
+              "time": 0.536,
+              "name": "B014"
+            },
+            {
+              "time": 0.67,
+              "name": "B015"
+            },
+            {
+              "time": 0.804,
+              "name": "B010"
+            }
+          ]
+        }
+      }
+    },
+    "hoverB": {
+      "slots": {
+        "sprite": {
+          "attachment": [
+            {
+              "time": 0.0,
+              "name": "B016"
+            },
+            {
+              "time": 0.134,
+              "name": "B017"
+            },
+            {
+              "time": 0.268,
+              "name": "B018"
+            },
+            {
+              "time": 0.402,
+              "name": "B019"
+            },
+            {
+              "time": 0.536,
+              "name": "B020"
+            },
+            {
+              "time": 0.67,
+              "name": "B021"
+            },
+            {
+              "time": 0.804,
+              "name": "B016"
+            }
+          ]
+        }
+      }
+    },
+    "dragB": {
+      "slots": {
+        "sprite": {
+          "attachment": [
+            {
+              "time": 0.0,
+              "name": "B026"
+            },
+            {
+              "time": 0.134,
+              "name": "B027"
+            },
+            {
+              "time": 0.268,
+              "name": "B028"
+            },
+            {
+              "time": 0.402,
+              "name": "B029"
+            },
+            {
+              "time": 0.536,
+              "name": "B026"
+            }
+          ]
+        }
+      }
+    },
+    "idleAfterB": {
+      "slots": {
+        "sprite": {
+          "attachment": [
+            {
+              "time": 0.0,
+              "name": "B030"
+            },
+            {
+              "time": 0.134,
+              "name": "B031"
+            },
+            {
+              "time": 0.268,
+              "name": "B032"
+            },
+            {
+              "time": 0.402,
+              "name": "B033"
+            },
+            {
+              "time": 0.536,
+              "name": "B034"
+            },
+            {
+              "time": 0.67,
+              "name": "B035"
+            },
+            {
+              "time": 0.804,
+              "name": "B030"
+            }
+          ]
+        }
+      }
+    },
+    "clickA": {
+      "slots": {
+        "sprite": {
+          "attachment": [
+            {
+              "time": 0.0,
+              "name": "A012"
+            },
+            {
+              "time": 0.134,
+              "name": "A013"
+            },
+            {
+              "time": 0.268,
+              "name": "A014"
+            },
+            {
+              "time": 0.402,
+              "name": "A015"
+            },
+            {
+              "time": 0.536,
+              "name": "A013"
+            }
+          ]
+        }
+      }
+    },
+    "hoverA": {
+      "slots": {
+        "sprite": {
+          "attachment": [
+            {
+              "time": 0.0,
+              "name": "A013"
+            },
+            {
+              "time": 1.9,
+              "name": "A014"
+            },
+            {
+              "time": 2.033,
+              "name": "A015"
+            },
+            {
+              "time": 2.166,
+              "name": "A013"
+            }
+          ]
+        }
+      }
+    },
+    "dragA": {
+      "slots": {
+        "sprite": {
+          "attachment": [
+            {
+              "time": 0.0,
+              "name": "A016"
+            },
+            {
+              "time": 1.2,
+              "name": "A017"
+            },
+            {
+              "time": 1.334,
+              "name": "A018"
+            },
+            {
+              "time": 1.468,
+              "name": "A016"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

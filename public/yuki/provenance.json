@@ -1,0 +1,34 @@
+{
+  "source_a": "E:\\OpenCode\\PWN\\extracted\\formA_states2",
+  "source_b": "E:\\OpenCode\\PWN\\extracted\\states_B",
+  "animations": [
+    "idleA",
+    "idleB",
+    "hoverB",
+    "dragB",
+    "idleAfterB",
+    "clickA",
+    "hoverA",
+    "dragA"
+  ],
+  "frames": 35,
+  "voices": {
+    "formA": {
+      "click": 9,
+      "drag": 6
+    },
+    "formB": {
+      "click": 7,
+      "drag": 7
+    }
+  },
+  "behaviour": "not hovering -> walking loops; hovering -> hover loop; dragging -> lifted loop; click -> reaction then idle_after",
+  "switch_trigger": "rapid consecutive left clicks -> change_mode.wav + yuki_spotlight.el",
+  "frame_interval_seconds": 0.134,
+  "atlas": {
+    "file": "yuki.png",
+    "width": 804,
+    "height": 504
+  },
+  "limitations": "GDI frame captures as Spine region attachments; not Cubism, not the original state machine."
+}

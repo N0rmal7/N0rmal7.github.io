@@ -47,3 +47,7 @@ package/
 .codex*
 .claude
 .mimocode
+
+# local dev logs
+.astro-dev.log
+*.astro-dev.log
