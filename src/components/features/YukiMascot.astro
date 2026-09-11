@@ -105,6 +105,32 @@ const corner = cfg.position?.corner || "bottom-left";
           } catch (e) {}
         }
 
+        // 预热语音，避免首次交互时才去加载 wav 造成延迟
+        function preloadVoices(kinds) {
+          try {
+            for (const form of ["formA", "formB"]) {
+              const bucket = pools[form];
+              if (!bucket) continue;
+              for (const kind of kinds) {
+                const list = bucket[kind];
+                if (!list) continue;
+                for (const entry of list) {
+                  const file = typeof entry === "string" ? entry : entry.file;
+                  if (!file) continue;
+                  const src = `${base}/${file.replace(/^\//, "")}`;
+                  if (voiceCache[src]) continue;
+                  const audio = new Audio();
+                  audio.preload = "auto";
+                  audio.volume = volume;
+                  audio.src = src;
+                  audio.load();
+                  voiceCache[src] = audio;
+                }
+              }
+            }
+          } catch (e) {}
+        }
+
         let pools = { formA: { click: [], drag: [] }, formB: { click: [], drag: [] } };
         let current = defaultForm === "B" ? "B" : "A";
         let player = null;
@@ -299,6 +325,9 @@ const corner = cfg.position?.corner || "bottom-left";
             const res = await fetch(`${base}/voices.json`);
             if (res.ok) pools = await res.json();
           } catch (e) {}
+          // 先预热点击池（最常用），拖动池稍后再预热
+          preloadVoices(["click"]);
+          setTimeout(() => preloadVoices(["drag"]), 1500);
 
           player = new window.spine.SpinePlayer("yuki-mascot-player", {
             skeleton: `${base}/yuki.json`,
@@ -308,6 +337,7 @@ const corner = cfg.position?.corner || "bottom-left";
             backgroundColor: "#00000000",
             premultipliedAlpha: false,
             showControls: false,
+            showLoading: false,
             mipmaps: false,
             viewport: {
               x: -48,
