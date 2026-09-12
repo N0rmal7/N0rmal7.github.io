@@ -1,7 +1,7 @@
 yuki.png
 size: 804, 504
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Linear, Linear
 repeat: none
 pma: false
 A000

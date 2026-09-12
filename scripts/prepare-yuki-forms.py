@@ -150,7 +150,7 @@ for slot, (dirp, index, n) in enumerate(used):
                         f"  size: 96, 96\n  orig: 96, 96\n  offset: 0, 0\n  index: -1")
 atlas.save(OUT / "yuki.png")
 header = (f"yuki.png\nsize: {atlas_w}, {atlas_h}\nformat: RGBA8888\n"
-          "filter: Nearest, Nearest\nrepeat: none\npma: false")
+          "filter: Linear, Linear\nrepeat: none\npma: false")
 (OUT / "yuki.atlas").write_text(header + "\n" + "\n".join(region_lines) + "\n")
 
 skeleton = {
