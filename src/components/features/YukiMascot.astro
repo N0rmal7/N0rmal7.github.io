@@ -24,7 +24,6 @@ const corner = cfg.position?.corner || "bottom-left";
         touch-action: none;
         -webkit-user-select: none;
         user-select: none;
-        cursor: pointer;
       `}
       aria-label="长门有希桌宠"
       role="button"
@@ -34,6 +33,18 @@ const corner = cfg.position?.corner || "bottom-left";
     </div>
   )
 }
+
+<style>
+  /* 悬停显示“抓取”光标；按住拖动时切换为“抓取中” */
+  #yuki-mascot,
+  #yuki-mascot :global(*) {
+    cursor: grab;
+  }
+  #yuki-mascot.yuki-grabbing,
+  #yuki-mascot.yuki-grabbing :global(*) {
+    cursor: grabbing;
+  }
+</style>
 
 {
   cfg.enable && (
@@ -252,6 +263,8 @@ const corner = cfg.position?.corner || "bottom-left";
             pressY = e.clientY;
             baseLeft = posX;
             baseTop = posY;
+            // Pressed/dragging -> closed-hand "grabbing" cursor.
+            container.classList.add("yuki-grabbing");
             try {
               container.setPointerCapture(e.pointerId);
             } catch (err) {}
@@ -277,6 +290,7 @@ const corner = cfg.position?.corner || "bottom-left";
           function endDrag() {
             if (!dragging) return;
             dragging = false;
+            container.classList.remove("yuki-grabbing");
             // Pure click (no movement): play the click voice on release.
             if (!movedDuringDrag) pickVoice("click");
             movedDuringDrag = false;
