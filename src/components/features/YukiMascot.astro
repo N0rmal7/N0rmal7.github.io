@@ -24,6 +24,7 @@ const corner = cfg.position?.corner || "bottom-left";
         touch-action: none;
         -webkit-user-select: none;
         user-select: none;
+        cursor: pointer;
       `}
       aria-label="长门有希桌宠"
       role="button"
@@ -33,16 +34,6 @@ const corner = cfg.position?.corner || "bottom-left";
     </div>
   )
 }
-
-<style>
-  /* 关键字兜底；真正的矢量光标由脚本以内联样式设置（内置光标在 HiDPI 下模糊） */
-  #yuki-mascot {
-    cursor: grab;
-  }
-  #yuki-mascot.yuki-grabbing {
-    cursor: grabbing;
-  }
-</style>
 
 {
   cfg.enable && (
@@ -59,19 +50,6 @@ const corner = cfg.position?.corner || "bottom-left";
     >
       (() => {
         const container = document.getElementById("yuki-mascot");
-
-        // 自定义矢量光标：张开手=抓取，握拳=抓取中
-        // （用内联样式设置，避免 CSS 中 data-URI 光标被解析器丢弃）
-        const CURSOR_GRAB =
-          'url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0IDQpIj48cGF0aCBmaWxsPSIjMWUyMjJhIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0xMyAyNGMtMy4yNiAwLTYuMTktMi03LjQtNWwtMy4wMy03LjYzYTEgMSAwIDAgMSAxLjI0LTEuMzJsLjc5LjI2Yy41Ni4xOSAxLjAyLjYxIDEuMjQgMS4xNkw3LjI1IDE1SDhWMy4yNWExLjI1IDEuMjUgMCAwIDEgMi41IDBWMTJoMVYxLjI1YTEuMjUgMS4yNSAwIDAgMSAyLjUgMFYxMmgxVjIuNzVhMS4yNSAxLjI1IDAgMCAxIDIuNSAwVjEyaDFWNS43NWExLjI1IDEuMjUgMCAwIDEgMi41IDBWMTZjMCA0LjQyLTMuNTggOC04IDgiLz48L2c+PC9zdmc+") 12 5, grab';
-        const CURSOR_GRABBING =
-          'url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0IDQpIj48cGF0aCBmaWxsPSIjMWUyMjJhIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTEwLjM4OCA1LjE2MmEyLjQ5OCAyLjQ5OCAwIDAgMSA0LjIyNCAwYTIuNSAyLjUgMCAwIDEgMy4zNDkgMS44OTZRMTguMjIyIDcgMTguNSA3QTIuNSAyLjUgMCAwIDEgMjEgOS41VjEyYTggOCAwIDAgMS04IDhoLS42NzRhOCA4IDAgMCAxLTcuMTU1LTQuNDIybC0zLjA2NS02LjEzYTEgMSAwIDAgMSAuNDQ3LTEuMzQyYzEuMTE1LS41NTggMi4xOTQtLjgxNiAzLjMzMi0uMzQyYy4zODUuMTYxLjc1My4zOTggMS4xMTUuNjk4VjcuNWEyLjUgMi41IDAgMCAxIDMuMzg4LTIuMzM4IiBjbGlwLXJ1bGU9ImV2ZW5vZGQiLz48L2c+PC9zdmc+") 12 5, grabbing';
-        function applyCursor(grabbing) {
-          const value = grabbing ? CURSOR_GRABBING : CURSOR_GRAB;
-          container.style.cursor = value;
-          const canvas = container.querySelector("canvas");
-          if (canvas) canvas.style.cursor = value;
-        }
         if (!container) return;
 
         // 移动端隐藏
@@ -274,9 +252,6 @@ const corner = cfg.position?.corner || "bottom-left";
             pressY = e.clientY;
             baseLeft = posX;
             baseTop = posY;
-            // Pressed/dragging -> closed-hand "grabbing" cursor.
-            container.classList.add("yuki-grabbing");
-            applyCursor(true);
             try {
               container.setPointerCapture(e.pointerId);
             } catch (err) {}
@@ -302,8 +277,6 @@ const corner = cfg.position?.corner || "bottom-left";
           function endDrag() {
             if (!dragging) return;
             dragging = false;
-            container.classList.remove("yuki-grabbing");
-            applyCursor(false);
             // Pure click (no movement): play the click voice on release.
             if (!movedDuringDrag) pickVoice("click");
             movedDuringDrag = false;
@@ -379,7 +352,6 @@ const corner = cfg.position?.corner || "bottom-left";
             success: () => {
               anim(current === "A" ? "idleA" : "idleB", true);
               bindInput();
-              applyCursor(false);
             },
             error: (_p, reason) => {
               console.warn("[yuki-mascot] load failed:", reason);
