@@ -240,7 +240,8 @@ pip3 install LibcSearcher -i https://pypi.tuna.tsinghua.edu.cn/simple
 ### 16 安装one_gadget
 
 ```
-pip3 install LibcSearcher -i https://pypi.tuna.tsinghua.edu.cn/simple
+sudo apt install ruby
+sudo gem install one_gadget
 ```
 
 
