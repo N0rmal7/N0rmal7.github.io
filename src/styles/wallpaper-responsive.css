@@ -206,3 +206,8 @@ html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper
         animation: none !important;
     }
 }
+
+/* Keep homepage links above the body hit-testing surface. */
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body.is-home #wallpaper-wrapper {
+    z-index: 0 !important;
+}
