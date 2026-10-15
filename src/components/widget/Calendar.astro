@@ -122,6 +122,25 @@ const postUrlPrefix = url("/posts/");
 </WidgetLayout>
 
 <script is:inline data-swup-ignore-script define:vars={{ monthNames, weekDays, yearText, currentLang, calendarDataUrl, postUrlPrefix, heatmapWeekTemplate }}>
+  // Calendar metadata is text, never HTML. Preserve the same nodes and styling.
+  function renderPostLinks(container, posts) {
+    const fragment = document.createDocumentFragment();
+    for (const post of posts) {
+      const date = new Date(post.published);
+      const link = document.createElement('a');
+      link.href = `${postUrlPrefix}${post.id}/`;
+      link.className = 'flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded-sm hover:bg-(--btn-plain-bg-hover)';
+      const title = document.createElement('span');
+      title.className = 'truncate';
+      title.textContent = post.title;
+      const time = document.createElement('span');
+      time.className = 'text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap';
+      time.textContent = `${date.getMonth() + 1}-${date.getDate()}`;
+      link.append(title, time);
+      fragment.appendChild(link);
+    }
+    container.replaceChildren(fragment);
+  }
   // State variables
   let displayYear = new Date().getFullYear();
   let displayMonth = new Date().getMonth();
@@ -471,15 +490,7 @@ const postUrlPrefix = url("/posts/");
     }
     
     if (postsList) {
-      postsList.innerHTML = currentMonthPosts.map(post => {
-        const date = new Date(post.published);
-        const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
-        return `
-        <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded-sm hover:bg-(--btn-plain-bg-hover)">
-          <span class="truncate">${post.title}</span>
-          <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
-        </a>
-      `}).join('');
+      renderPostLinks(postsList, currentMonthPosts);
       
       // 显示/隐藏分割线
       if (divider) {
@@ -531,15 +542,7 @@ const postUrlPrefix = url("/posts/");
           }
 
           // 渲染文章列表
-          postsList.innerHTML = posts.map(post => {
-            const date = new Date(post.published);
-            const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
-            return `
-            <a href="${postUrlPrefix}${post.id}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded-sm hover:bg-(--btn-plain-bg-hover)">
-              <span class="truncate">${post.title}</span>
-              <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
-            </a>
-          `}).join('');
+          renderPostLinks(postsList, posts);
           
           // 显示分割线
           if (divider) {

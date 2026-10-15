@@ -185,7 +185,8 @@ const labels = {
     if (!pwd) return;
     hideError();
     decrypt(pwd).then(function(html) {
-      sessionStorage.setItem(cacheKey, pwd);
+      // Storage may be blocked in an embedded browser; it must not prevent reading.
+      try { sessionStorage.setItem(cacheKey, pwd); } catch {}
       showContent(html);
     }).catch(function() {
       showError();
@@ -193,12 +194,13 @@ const labels = {
   });
 
   // Try cached password
-  var cached = sessionStorage.getItem(cacheKey);
+  var cached = null;
+  try { cached = sessionStorage.getItem(cacheKey); } catch {}
   if (cached) {
     decrypt(cached).then(function(html) {
       showContent(html);
     }).catch(function() {
-      sessionStorage.removeItem(cacheKey);
+      try { sessionStorage.removeItem(cacheKey); } catch {}
     });
   }
 })();
