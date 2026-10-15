@@ -61,21 +61,14 @@ const corner = cfg.position?.corner || "bottom-left";
           return;
         }
 
-        // 动态加载 Spine 运行时（本地优先，失败再回退 CDN）
+        // 只使用随站点发布的运行时，避免浮动 CDN 依赖。
         function ensureRuntime() {
           return new Promise((resolve, reject) => {
             if (window.spine && window.spine.SpinePlayer) return resolve();
             const local = document.createElement("script");
             local.src = jsPath;
             local.onload = () => resolve();
-            local.onerror = () => {
-              const cdn = document.createElement("script");
-              cdn.src =
-                "https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.min.js";
-              cdn.onload = () => resolve();
-              cdn.onerror = () => reject(new Error("Spine runtime load failed"));
-              document.head.appendChild(cdn);
-            };
+            local.onerror = () => reject(new Error("Local Spine runtime load failed"));
             document.head.appendChild(local);
           });
         }
@@ -318,6 +311,8 @@ const corner = cfg.position?.corner || "bottom-left";
           try {
             await ensureRuntime();
           } catch (e) {
+            container.hidden = true;
+            console.warn("[Yuki] Local runtime unavailable", e);
             return;
           }
           // 语音池清单

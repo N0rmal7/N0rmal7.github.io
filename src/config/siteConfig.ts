@@ -46,7 +46,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "",
 
 	// 站点 URL
-	site_url: "https://N0rmal7.github.io/",
+	site_url: "https://n0rmal7.top/",
 
 	// 站点描述
 	description:

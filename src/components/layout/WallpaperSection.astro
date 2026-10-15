@@ -23,12 +23,12 @@ const wallpaperPosition = state.isFullscreenMode
 	? (backgroundWallpaper.fullscreen?.position ??
 		backgroundWallpaper.banner?.position)
 	: backgroundWallpaper.banner?.position;
-const desktopWallpaperPosition = "0% 10%";
+const desktopWallpaperPosition = wallpaperPosition;
 ---
 
 <!-- Wallpaper - 如果允许切换则始终渲染，否则只渲染当前模式 -->
 {(state.isWallpaperSwitchable || state.isBannerMode || state.isFullscreenMode || state.isOverlayMode) && (
-<div id="wallpaper-wrapper" class="absolute z-10 w-full overflow-hidden" style="--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;">
+<div id="wallpaper-wrapper" class="absolute z-10 w-full overflow-hidden" style={`--overlay-opacity: ${backgroundWallpaper.overlay?.opacity ?? 0.8}; --overlay-z-index: ${backgroundWallpaper.overlay?.zIndex ?? -1}; --overlay-blur: ${backgroundWallpaper.overlay?.blur ?? 0}px;`}>
 <!-- 背景图片显示 -->
     {state.hasMultipleImages ? (
     /* 轮播模式：渲染所有图片为 slide-item */
@@ -40,7 +40,7 @@ const desktopWallpaperPosition = "0% 10%";
          data-carousel-effect={state.bannerCarouselEffect}>
         {/* 图片放在 <template> 里，浏览器不会发起请求；由轮播脚本挑中随机那张后克隆进 DOM */}
         {backgroundImages.mobile.map((src, index) => (
-            <div class:list={["slide-item block lg:hidden", index === 0 && "active"]} data-index={index}>
+            <div class:list={["slide-item wallpaper-mobile", index === 0 && "active"]} data-index={index}>
                 <template>
                     <ImageWrapper
                         alt="Mobile background image of the blog"
@@ -57,7 +57,7 @@ const desktopWallpaperPosition = "0% 10%";
             </div>
         ))}
         {backgroundImages.desktop.map((src, index) => (
-            <div class:list={["slide-item hidden lg:block", index === 0 && "active"]} data-index={index}>
+            <div class:list={["slide-item wallpaper-desktop", index === 0 && "active"]} data-index={index}>
                 <template>
                     <ImageWrapper
 						alt="Desktop background image of the blog"
@@ -75,7 +75,7 @@ const desktopWallpaperPosition = "0% 10%";
         ))}
         <noscript>
             {backgroundImages.mobile.length > 0 && (
-                <div class="slide-item active block lg:hidden">
+                <div class="slide-item active wallpaper-mobile">
                     <ImageWrapper
                         alt="Mobile background image of the blog"
                         class="object-cover h-full w-full"
@@ -92,7 +92,7 @@ const desktopWallpaperPosition = "0% 10%";
                 </div>
             )}
             {backgroundImages.desktop.length > 0 && (
-                <div class="slide-item active hidden lg:block">
+                <div class="slide-item active wallpaper-desktop">
                     <ImageWrapper
 						alt="Desktop background image of the blog"
 						class="object-cover h-full"
@@ -116,7 +116,7 @@ const desktopWallpaperPosition = "0% 10%";
         {/* 两侧都放在 <template> 里，由下面的脚本按 matchMedia 只实例化匹配的那一侧，
             避免桌面端白下一张手机图（display:none 挡不住 loading="eager"） */}
         {backgroundImages.mobile.length > 0 && (
-            <div class="banner-image-slot absolute inset-0 block lg:hidden">
+            <div class="banner-image-slot absolute inset-0 wallpaper-mobile">
                 <template>
                     <ImageWrapper
                         alt="Mobile background image of the blog"
@@ -133,7 +133,7 @@ const desktopWallpaperPosition = "0% 10%";
             </div>
         )}
         {backgroundImages.desktop.length > 0 && (
-            <div class="banner-image-slot absolute inset-0 hidden lg:block">
+            <div class="banner-image-slot absolute inset-0 wallpaper-desktop">
                 <template>
                     <ImageWrapper
 						alt="Desktop background image of the blog"
@@ -151,7 +151,7 @@ const desktopWallpaperPosition = "0% 10%";
         )}
         <noscript>
             {backgroundImages.mobile.length > 0 && (
-                <div class="absolute inset-0 block lg:hidden">
+                <div class="absolute inset-0 wallpaper-mobile">
                     <ImageWrapper
                         alt="Mobile background image of the blog"
                         class="object-cover h-full w-full"
@@ -168,7 +168,7 @@ const desktopWallpaperPosition = "0% 10%";
                 </div>
             )}
             {backgroundImages.desktop.length > 0 && (
-                <div class="absolute inset-0 hidden lg:block">
+                <div class="absolute inset-0 wallpaper-desktop">
                     <ImageWrapper
 						alt="Desktop background image of the blog"
 						class="object-cover h-full"
@@ -270,12 +270,12 @@ const desktopWallpaperPosition = "0% 10%";
             // 获取当前设备可见的 slide-item
             function getVisibleSlides() {
                 var all = container.querySelectorAll('.slide-item');
-                var isLg = window.innerWidth >= 1024;
+                var isLg = window.matchMedia('(min-width: 1024px), (hover: hover) and (pointer: fine)').matches;
                 var visible = [];
                 for (var i = 0; i < all.length; i++) {
                     var el = all[i];
-                    if (isLg && el.classList.contains('lg:hidden')) continue;
-                    if (!isLg && el.classList.contains('hidden') && !el.classList.contains('lg:hidden')) continue;
+                    if (isLg && el.classList.contains('wallpaper-mobile')) continue;
+                    if (!isLg && el.classList.contains('wallpaper-desktop')) continue;
                     visible.push(el);
                 }
                 if (visible.length === 0) {
@@ -431,9 +431,9 @@ const desktopWallpaperPosition = "0% 10%";
                 });
             }
 
-            // 断点跨过 1024px 时，另一侧那组还没有实例化过的 active，需要补上
+            // 壁纸设备查询变化时，另一侧那组还没有实例化过的 active，需要补上
             if (window.matchMedia) {
-                var lgQuery = window.matchMedia('(min-width: 1024px)');
+                var lgQuery = window.matchMedia('(min-width: 1024px), (hover: hover) and (pointer: fine)');
                 var onBreakpointChange = function () {
                     var s = getVisibleSlides();
                     if (!s.length) return;
@@ -510,11 +510,11 @@ const desktopWallpaperPosition = "0% 10%";
 
             function sync() {
                 var all = container.querySelectorAll('.banner-image-slot');
-                var isLg = window.innerWidth >= 1024;
+                var isLg = window.matchMedia('(min-width: 1024px), (hover: hover) and (pointer: fine)').matches;
                 for (var i = 0; i < all.length; i++) {
                     var el = all[i];
-                    if (isLg && el.classList.contains('lg:hidden')) continue;
-                    if (!isLg && el.classList.contains('hidden') && !el.classList.contains('lg:hidden')) continue;
+                    if (isLg && el.classList.contains('wallpaper-mobile')) continue;
+                    if (!isLg && el.classList.contains('wallpaper-desktop')) continue;
                     materialize(el, true);
                 }
             }
@@ -522,145 +522,13 @@ const desktopWallpaperPosition = "0% 10%";
             sync();
 
             if (window.matchMedia) {
-                var lgQuery = window.matchMedia('(min-width: 1024px)');
+                var lgQuery = window.matchMedia('(min-width: 1024px), (hover: hover) and (pointer: fine)');
                 if (lgQuery.addEventListener) lgQuery.addEventListener('change', sync);
                 else if (lgQuery.addListener) lgQuery.addListener(sync);
             }
         })();
     </script>
     )}
-
-    <!-- 移动端 Fullscreen hero 等比填充保底（不依赖 UA / class / 外部样式表）。
-         仅当视口 < 1024 时用 inline style 直接把壁纸容器与图片按“高度铺满、宽度等比、
-         水平居中、左右溢出裁掉”写死，绕开老 WebView 对百分比高度与 object-fit 的兼容问题；
-         wrapper 高度钉死为首次 layout viewport 高度(px)，地址栏收展不触发重排缩放。
-         桌面视口不执行，不影响正常浏览器。 -->
-    <script is:inline data-swup-ignore-script>
-        (function () {
-            if (window.__fireflyMobileWallpaperInline) return;
-            function isMobileViewport() {
-                return (window.innerWidth || document.documentElement.clientWidth) < 1024;
-            }
-            if (!isMobileViewport()) return;
-            window.__fireflyMobileWallpaperInline = true;
-
-            var fixedH = 0;
-            var fixedW = 0;
-            function readSize() {
-                /* layout viewport：position:fixed 默认相对它定位，比 visualViewport/innerHeight 稳定 */
-                var w = document.documentElement.clientWidth || window.innerWidth;
-                var h = document.documentElement.clientHeight || window.innerHeight;
-                return { w: w, h: h };
-            }
-            function setImp(el, prop, val) {
-                el.style.setProperty(prop, val, "important");
-            }
-            function isVisibleSlot(el) {
-                /* 跳过带 hidden 的桌面槽：只处理当前设备实际显示的图片槽 */
-                return el && !(el.classList && el.classList.contains("hidden"));
-            }
-            function apply() {
-                var wrap = document.getElementById("wallpaper-wrapper");
-                if (!wrap) return;
-                var wm = document.documentElement.getAttribute("data-wallpaper-mode");
-                var layout = document.documentElement.getAttribute("data-fullscreen-layout");
-                if (wm !== "fullscreen" || layout !== "hero") return;
-                if (!fixedH || !fixedW) {
-                    var s = readSize();
-                    fixedW = s.w;
-                    fixedH = s.h;
-                }
-                /* 容器：钉死在首次 layout viewport 尺寸(px)，地址栏收展不触发重排缩放 */
-                setImp(wrap, "position", "fixed");
-                setImp(wrap, "top", "0");
-                setImp(wrap, "left", "0");
-                setImp(wrap, "right", "auto");
-                setImp(wrap, "bottom", "auto");
-                setImp(wrap, "width", fixedW + "px");
-                setImp(wrap, "height", fixedH + "px");
-                setImp(wrap, "minHeight", "0");
-                setImp(wrap, "maxHeight", "none");
-                setImp(wrap, "overflow", "hidden");
-                setImp(wrap, "display", "block");
-                setImp(wrap, "zIndex", "-1");
-                setImp(wrap, "opacity", "1");
-                setImp(wrap, "transform", "none");
-                setImp(wrap, "pointerEvents", "none");
-
-                var slots = wrap.querySelectorAll(".banner-image-slot, .slide-item");
-                for (var s2 = 0; s2 < slots.length; s2++) {
-                    var slot = slots[s2];
-                    if (!isVisibleSlot(slot)) continue;
-                    setImp(slot, "position", "absolute");
-                    setImp(slot, "top", "0");
-                    setImp(slot, "left", "0");
-                    setImp(slot, "right", "0");
-                    setImp(slot, "bottom", "0");
-                    setImp(slot, "width", "100%");
-                    setImp(slot, "height", "100%");
-                    setImp(slot, "overflow", "hidden");
-                }
-                var pics = wrap.querySelectorAll("picture");
-                for (var p = 0; p < pics.length; p++) {
-                    var pic = pics[p];
-                    if (!pic.parentElement || !isVisibleSlot(pic.parentElement)) continue;
-                    setImp(pic, "position", "absolute");
-                    setImp(pic, "top", "0");
-                    setImp(pic, "left", "0");
-                    setImp(pic, "right", "0");
-                    setImp(pic, "bottom", "0");
-                    setImp(pic, "width", "100%");
-                    setImp(pic, "height", "100%");
-                    setImp(pic, "overflow", "hidden");
-                }
-                var imgs = wrap.querySelectorAll("img");
-                for (var i = 0; i < imgs.length; i++) {
-                    var im = imgs[i];
-                    /* 只处理可见槽/可见图片容器内的 img（跳过 hidden 桌面槽、隐藏的轮播项） */
-                    var parent = im.parentElement;
-                    var inVisibleSlot = parent && (!parent.classList || !parent.classList.contains("hidden"));
-                    var inPictureOfVisible = im.parentElement && im.parentElement.parentElement && isVisibleSlot(im.parentElement.parentElement);
-                    if (!inVisibleSlot && !inPictureOfVisible) continue;
-                    /* 等比（高铺满 + 宽 auto + 水平居中），左右溢出裁掉；不依赖 object-fit */
-                    setImp(im, "display", "block");
-                    setImp(im, "position", "absolute");
-                    setImp(im, "top", "0");
-                    setImp(im, "left", "50%");
-                    setImp(im, "right", "auto");
-                    setImp(im, "bottom", "auto");
-                    setImp(im, "width", "auto");
-                    setImp(im, "height", "100%");
-                    setImp(im, "maxWidth", "none");
-                    setImp(im, "margin", "0");
-                    setImp(im, "transform", "translateX(-50%)");
-                    setImp(im, "objectFit", "fill");
-                    setImp(im, "objectPosition", "center center");
-                    setImp(im, "filter", "none");
-                    setImp(im, "opacity", "1");
-                }
-                var phs = wrap.querySelectorAll(".lqip-placeholder");
-                for (var j = 0; j < phs.length; j++) {
-                    var ph = phs[j];
-                    var inSlot = ph.parentElement && isVisibleSlot(ph.parentElement);
-                    if (inSlot) setImp(ph, "display", "none");
-                }
-            }
-            apply();
-            if (document.readyState === "loading") {
-                document.addEventListener("DOMContentLoaded", apply);
-            }
-            window.addEventListener("load", apply);
-            document.addEventListener("pageshow", apply);
-            setTimeout(apply, 300);
-            setTimeout(apply, 800);
-            setTimeout(apply, 2000);
-            if (window.swup && window.swup.hooks) {
-                window.swup.hooks.on("content:replace", apply);
-            } else {
-                document.addEventListener("swup:contentReplaced", apply);
-            }
-        })();
-    </script>
 
     {backgroundWallpaper.playerEnable && typeof backgroundWallpaper.src === "object" && !Array.isArray(backgroundWallpaper.src) && backgroundWallpaper.src.playerUrl && (
 		<BackgroundPlayer playerUrl={backgroundWallpaper.src.playerUrl} playerMode={backgroundWallpaper.common?.playerMode ?? "order"} autoPlay={true} />

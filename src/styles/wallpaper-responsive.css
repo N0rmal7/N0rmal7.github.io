@@ -1,0 +1,208 @@
+/* Fullscreen hero: full-bleed artwork with centered text on every device.
+   Banner/overlay/classic settings keep their behavior. */
+/* Match the materialization query in WallpaperSection. Desktop zoom changes CSS
+   viewport width, but does not turn a mouse/trackpad into a touch-only device. */
+#wallpaper-wrapper .wallpaper-mobile { display: block; }
+#wallpaper-wrapper .wallpaper-desktop { display: none; }
+@media (min-width: 1024px), (hover: hover) and (pointer: fine) {
+    #wallpaper-wrapper .wallpaper-mobile { display: none; }
+    #wallpaper-wrapper .wallpaper-desktop { display: block; }
+}
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] {
+    --wallpaper-hero-height: 100vh;
+    --wallpaper-ink: #fff;
+    --wallpaper-muted: rgb(255 255 255 / .9);
+}
+
+@supports (height: 100svh) {
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] {
+        --wallpaper-hero-height: 100svh;
+    }
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper {
+    height: var(--wallpaper-hero-height) !important;
+    background: radial-gradient(ellipse at 12% 75%, #efdeeb 0%, transparent 55%),
+        linear-gradient(110deg, #fffdf9 0%, #fbf5f8 60%, #f0eef5 100%);
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body.is-home .content-panel {
+    --content-top: var(--wallpaper-hero-height);
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body.is-home #top-row {
+    height: var(--wallpaper-hero-height);
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper #banner-images-container,
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-image-slot,
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .slide-item,
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper picture {
+    width: 100%;
+    height: 100%;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper img {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    object-position: 56% 30% !important;
+    transform: none !important;
+    mask-image: none;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .lqip-placeholder,
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-image-slot > .transition,
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper #banner-dim-container {
+    display: none !important;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper::after {
+    background: linear-gradient(rgb(0 0 0 / .2), rgb(0 0 0 / .2)),
+        radial-gradient(120% 90% at 50% 45%, transparent 55%, rgb(0 0 0 / .15) 100%);
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body.is-home #wallpaper-wrapper .banner-home-text-overlay {
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 5rem 1.25rem !important;
+    text-align: center !important;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-home-text-overlay > div {
+    width: min(80vw, 64rem) !important;
+    text-align: inherit !important;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-title {
+    font-size: clamp(2.5rem, 4.3vw, 5rem) !important;
+    color: var(--wallpaper-ink) !important;
+    line-height: 1.15 !important;
+    letter-spacing: -.04em;
+    text-wrap: balance;
+    text-shadow: 0 3px 18px rgb(0 0 0 / .35) !important;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-subtitle {
+    font-size: clamp(.95rem, 1.25vw, 1.3rem) !important;
+    color: var(--wallpaper-muted) !important;
+    min-height: 2.8em;
+    text-shadow: 0 2px 12px rgb(0 0 0 / .35) !important;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-links {
+    justify-content: center;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-link {
+    color: var(--wallpaper-ink) !important;
+    background: rgb(255 255 255 / .14);
+    border: 1px solid rgb(255 255 255 / .25);
+    border-radius: 999px;
+    padding: .6rem 1rem;
+    text-shadow: none;
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body.is-home #wallpaper-wrapper .scroll-down-indicator {
+    bottom: max(1.25rem, env(safe-area-inset-bottom)) !important;
+    color: var(--wallpaper-ink);
+}
+
+html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .scroll-down-indicator .scroll-down-icon {
+    font-size: 2.5rem;
+    filter: none;
+}
+
+/* Portrait phones/tablets: keep the title centered over the background.
+   svh keeps the first screen stable while mobile browser toolbars expand/collapse. */
+@media (max-width: 1023px) and (orientation: portrait) and (hover: none), (max-width: 1023px) and (orientation: portrait) and (pointer: coarse) {
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body.is-home #wallpaper-wrapper .banner-home-text-overlay {
+        align-items: center !important;
+        justify-content: center !important;
+        padding: max(4rem, env(safe-area-inset-top)) 1.25rem max(4rem, env(safe-area-inset-bottom)) !important;
+        text-align: center !important;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-home-text-overlay > div {
+        width: 100% !important;
+        max-width: 28rem;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-title {
+        font-size: clamp(1.7rem, 8vw, 3rem) !important;
+        margin-bottom: .5rem !important;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-subtitle {
+        font-size: clamp(.8rem, 3.2vw, 1rem) !important;
+        min-height: 1.4em;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-links {
+        justify-content: center;
+        margin-top: .75rem;
+    }
+}
+
+/* Desktop: match the original immersive fullscreen composition. Keep the face in
+   the upper part of the source instead of using the vertical midpoint. */
+@media (min-width: 1024px), (hover: hover) and (pointer: fine), (orientation: landscape) {
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] {
+        --wallpaper-ink: #fff;
+        --wallpaper-muted: rgb(255 255 255 / .9);
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper img {
+        object-fit: cover !important;
+        object-position: center 8% !important;
+        mask-image: none;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper::after {
+        background: linear-gradient(rgb(0 0 0 / .2), rgb(0 0 0 / .2)),
+            radial-gradient(120% 90% at 50% 45%, transparent 55%, rgb(0 0 0 / .15) 100%);
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body.is-home #wallpaper-wrapper .banner-home-text-overlay {
+        justify-content: center !important;
+        padding: 5rem 2rem !important;
+        text-align: center !important;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-home-text-overlay > div {
+        width: min(80vw, 64rem) !important;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-title {
+        font-size: clamp(2.75rem, 3.2vw, 4.5rem) !important;
+        letter-spacing: normal;
+        text-shadow: 0 3px 18px rgb(0 0 0 / .35) !important;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-subtitle {
+        min-height: 1.4em;
+        text-shadow: 0 2px 12px rgb(0 0 0 / .35) !important;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-links {
+        justify-content: center;
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .banner-link {
+        background: rgb(255 255 255 / .14);
+        border-color: rgb(255 255 255 / .25);
+    }
+
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] body.is-home #wallpaper-wrapper .scroll-down-indicator {
+        bottom: 3.5rem !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-wallpaper-mode="fullscreen"][data-fullscreen-layout="hero"] #wallpaper-wrapper .scroll-down-icon {
+        animation: none !important;
+    }
+}

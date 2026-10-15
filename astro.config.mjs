@@ -65,9 +65,19 @@ const adapter = process.env.CF_WORKERS
 		})
 	: undefined;
 
+// 本地开发及预览也验证安全响应头；生产静态托管见 public/_headers。
+const securityHeaders = {
+	"X-Content-Type-Options": "nosniff",
+	"X-Frame-Options": "SAMEORIGIN",
+	"Referrer-Policy": "strict-origin-when-cross-origin",
+	"Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+	"Content-Security-Policy": "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self' https://github.com https://giscus.app",
+};
+
 // https://astro.build/config
 export default defineConfig({
 	site: siteConfig.site_url,
+	server: { headers: securityHeaders },
 
 	base: "/",
 	trailingSlash: "always",

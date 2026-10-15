@@ -73,16 +73,14 @@ const stats = [
 		value: posts.length,
 	},
 	{
-		icon: "material-symbols:group-outline",
-		label: "访客数",
-		value: "—",
-		id: "site-uv",
+		icon: "material-symbols:folder-outline",
+		label: "分类数",
+		value: new Set(posts.map((post) => post.data.category).filter(Boolean)).size,
 	},
 	{
-		icon: "material-symbols:visibility-outline",
-		label: "总浏览量",
-		value: "—",
-		id: "site-pv",
+		icon: "material-symbols:label-outline",
+		label: "标签数",
+		value: new Set(posts.flatMap((post) => post.data.tags)).size,
 	},
 	{
 		icon: "material-symbols:text-ad-outline-rounded",
@@ -140,42 +138,6 @@ const stats = [
 </WidgetLayout>
 
 <script is:inline define:vars={{ siteStartDate, lastPostDate, todayText }}>
-  function loadBusuanzi() {
-    if (window.__busuanziLoaded) return;
-    window.__busuanziLoaded = true;
-    function syncBusuanziValues() {
-      const uv = document.getElementById("busuanzi_value_site_uv");
-      const pv = document.getElementById("busuanzi_value_site_pv");
-      const uvValue = document.querySelector('[data-stat-id="site-uv"]');
-      const pvValue = document.querySelector('[data-stat-id="site-pv"]');
-      const uvText = uv?.textContent?.trim() || "";
-      const pvText = pv?.textContent?.trim() || "";
-      if (uvValue && uvText) uvValue.textContent = uvText;
-      if (pvValue && pvText) pvValue.textContent = pvText;
-      return Boolean(uvText && pvText);
-    }
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
-    script.onload = function () {
-      let attempts = 0;
-      const timer = window.setInterval(() => {
-        attempts += 1;
-        if (syncBusuanziValues() || attempts >= 20) {
-          window.clearInterval(timer);
-        }
-      }, 500);
-    };
-    document.head.appendChild(script);
-  }
-
-  // 隐藏的 Busuanzi 计数节点：脚本加载后将数值同步到统计卡片。
-  const busuanziHost = document.createElement("div");
-  busuanziHost.style.display = "none";
-  busuanziHost.innerHTML = '<span id="busuanzi_value_site_uv"></span><span id="busuanzi_value_site_pv"></span>';
-  document.body.appendChild(busuanziHost);
-  loadBusuanzi();
-
   function updateDynamicStats() {
     const today = new Date();
 

@@ -36,11 +36,11 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	 * ],
 	 */
 	src: {
-		// 桌面静态壁纸改为单张 AVIF。
-		desktop: ["assets/images/DesktopWallpaper/m1.avif"],
+		// 同一幅原画的两份 WebP：桌面高分辨率、移动端轻量资源。
+		desktop: ["/assets/images/wallpaper/nagato-desktop.webp"],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "assets/images/MobileWallpaper/m1.avif",
-		mobile: ["assets/images/MobileWallpaper/m1.avif"],
+		mobile: ["/assets/images/wallpaper/nagato-mobile.webp"],
 		// 背景视频播放地址，当前不使用动态壁纸。
 	},
 	// 横幅壁纸和全屏壁纸共享配置

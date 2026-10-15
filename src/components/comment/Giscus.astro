@@ -1,5 +1,7 @@
 ---
+import { getCollection } from "astro:content";
 import { commentConfig } from "@/config";
+import { dynamicSlug } from "@/utils/dynamic-utils";
 
 if (!commentConfig?.giscus) {
 	throw new Error("Giscus comments are not configured");
@@ -8,10 +10,14 @@ if (!commentConfig?.giscus) {
 const giscus = commentConfig.giscus;
 const lightTheme = "light";
 const darkTheme = "dark";
+// 仅动态评论嵌入页可覆盖映射，且必须匹配实际存在的动态。
+const allowedPaths = Astro.url.pathname.replace(/\/+$/, "") === "/dynamic/comments"
+  ? (await getCollection("dynamic")).map((entry) => `/dynamic/${dynamicSlug(entry.id)}/`)
+  : [];
 ---
 
 <!-- 
-  Giscus 官方Web Component用法，兼容Astro静态输出，无需import包，无需NPM依赖！
+  Giscus Web Component 随站点打包，版本和完整性由 pnpm-lock.yaml 锁定。
   参考：https://giscus.app/ 详情配置说明
 -->
 <giscus-widget
@@ -30,15 +36,17 @@ const darkTheme = "dark";
   loading={giscus.loading}
 />
 
-<script is:inline define:vars={{ lightTheme, darkTheme }}>
+<script>
+  import "giscus";
+</script>
+
+<script is:inline define:vars={{ lightTheme, darkTheme, allowedPaths }}>
   const requestedPath = new URLSearchParams(window.location.search).get("path");
   const widget = document.querySelector("giscus-widget");
-  if (requestedPath && widget) {
+  if (requestedPath && allowedPaths.includes(requestedPath) && widget) {
     widget.setAttribute("mapping", "specific");
     widget.setAttribute("term", requestedPath);
   }
-
-  import("https://esm.sh/giscus");
 
   function updateGiscusTheme() {
     const isDark = document.documentElement.classList.contains('dark');
