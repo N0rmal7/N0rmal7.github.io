@@ -54,13 +54,19 @@ export const siteConfig: SiteConfig = {
 
 	// 站点关键词
 	keywords: [
-		"Firefly",
-		"Fuwari",
-		"Astro",
-		"ACGN",
-		"博客",
+		"N0rmal7",
+		"PWN",
+		"CTF",
+		"二进制安全",
+		"漏洞利用",
+		"栈溢出",
+		"堆溢出",
+		"ROP",
+		"pwntools",
+		"glibc",
+		"汇编语言",
+		"Linux",
 		"技术博客",
-		"静态博客",
 	],
 
 	// 主题色

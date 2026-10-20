@@ -29,6 +29,7 @@ interface Props {
 	ogImageHeight?: number;
 	ogImageAlt?: string;
 	postCategory?: string;
+	keywords?: string[];
 	headings?: MarkdownHeading[];
 	encrypted?: boolean;
 	bannerPostMeta?: {
@@ -55,6 +56,7 @@ const {
 	ogImageHeight,
 	ogImageAlt,
 	postCategory,
+	keywords,
 	headings = [],
 	encrypted = false,
 	bannerPostMeta,
@@ -89,7 +91,7 @@ const {
 } = sidebar;
 ---
 
-<Layout title={title} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug} postCoverImage={postCoverImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} ogImageAlt={ogImageAlt} hasWallpaper={hasWallpaper}>
+<Layout title={title} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle} postSlug={postSlug} postCoverImage={postCoverImage} ogImageWidth={ogImageWidth} ogImageHeight={ogImageHeight} ogImageAlt={ogImageAlt} hasWallpaper={hasWallpaper} keywords={keywords}>
 
 <slot slot="head" name="head" />
 <HeaderTopRow navbarMode={navbarMode} navbarWidthFull={navbarWidthFull} />

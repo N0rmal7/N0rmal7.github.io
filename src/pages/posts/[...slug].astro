@@ -207,6 +207,11 @@ const seriesData = await getSeriesPosts(entry);
   postSlug={entry.id}
   postCoverImage={coverImage?.url}
   postCategory={entry.data.category || undefined}
+  keywords={[
+    ...entry.data.tags,
+    ...(entry.data.category ? [entry.data.category] : []),
+    ...(entry.data.series ? [entry.data.series] : []),
+  ]}
   ogImageWidth={coverImage?.width}
   ogImageHeight={coverImage?.height}
   ogImageAlt={entry.data.title}
