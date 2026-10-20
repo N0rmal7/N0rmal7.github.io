@@ -374,13 +374,35 @@ const corner = cfg.position?.corner || "bottom-left";
 
         current = readForm();
 
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", () => {
-            applyEnabled(readEnabled());
-          });
-        } else {
-          applyEnabled(readEnabled());
+        // 性能：运行库(254KB)+贴图(138KB)+语音预载(点击 1.9MB / 拖动 2.2MB) 全部推迟到
+        // 首屏渲染完成后再加载。可见性立即应用（零成本），真正初始化放在 load + 空闲时。
+        const enabledNow = readEnabled();
+        container.style.display = enabledNow ? "" : "none";
+
+        function runInit() {
+          if (!readEnabled()) return;
+          if (window.__yukiStarted) return;
+          window.__yukiStarted = true;
+          init();
         }
+
+        function scheduleInit() {
+          if (!enabledNow) return;
+          const kick = () => {
+            if (typeof window.requestIdleCallback === "function") {
+              window.requestIdleCallback(runInit, { timeout: 2000 });
+            } else {
+              setTimeout(runInit, 200);
+            }
+          };
+          if (document.readyState === "complete") {
+            kick();
+          } else {
+            window.addEventListener("load", kick, { once: true });
+          }
+        }
+
+        scheduleInit();
       })();
     </script>
   )

@@ -10,6 +10,8 @@ const description = "";
 ---
 
 <MainGridLayout title={title} description={description}>
+    {/* 站内搜索是纯客户端工具页，无独立内容价值：不索引、但允许跟随链接 */}
+    <meta slot="head" name="robots" content="noindex, follow" />
     <div class="min-h-[80vh]">
         <AdvancedSearch client:load title={title} description={description} />
     </div>

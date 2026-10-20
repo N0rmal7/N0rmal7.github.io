@@ -59,6 +59,55 @@ if (process.env.NODE_ENV === "development") {
 	setMaxListeners(20);
 }
 
+// ── sitemap lastmod：从文章 frontmatter 读取 updated / published ──
+// 让爬虫知道哪些文章更新过、优先重抓；纯静态读取，不影响构建产物。
+import fs from "node:fs";
+import path from "node:path";
+
+const postLastmodMap = (() => {
+	const map = new Map();
+	const root = path.join(process.cwd(), "src", "content", "posts");
+
+	function walk(dir) {
+		let entries = [];
+		try {
+			entries = fs.readdirSync(dir, { withFileTypes: true });
+		} catch {
+			return;
+		}
+		for (const entry of entries) {
+			const full = path.join(dir, entry.name);
+			if (entry.isDirectory()) {
+				walk(full);
+				continue;
+			}
+			if (!/\.(md|mdx)$/i.test(entry.name)) continue;
+			let raw;
+			try {
+				raw = fs.readFileSync(full, "utf8");
+			} catch {
+				continue;
+			}
+			const fm = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+			if (!fm) continue;
+			const updated = fm[1].match(/^\s*updated:\s*(.+)$/m);
+			const published = fm[1].match(/^\s*published:\s*(.+)$/m);
+			const rawDate = (updated?.[1] ?? published?.[1] ?? "").trim().replace(/^["']|["']$/g, "");
+			if (!rawDate) continue;
+			const parsed = new Date(rawDate);
+			if (Number.isNaN(parsed.getTime())) continue;
+			const slug = path
+				.relative(root, full)
+				.replace(/\\/g, "/")
+				.replace(/\.(md|mdx)$/i, "");
+			map.set(`/posts/${slug}/`, parsed.toISOString());
+		}
+	}
+
+	walk(root);
+	return map;
+})();
+
 const adapter = process.env.CF_WORKERS
 	? cloudflare({
 			prerenderEnvironment: "node",
@@ -249,6 +298,14 @@ export default defineConfig({
 				// 根据页面开关配置过滤sitemap
 				const url = new URL(page);
 				const pathname = url.pathname;
+				// 薄内容/工具页：不放进 sitemap，避免稀释站点主题信号
+				if (
+					pathname === "/search/" ||
+					pathname === "/rss/" ||
+					pathname === "/dynamic/comments/"
+				) {
+					return false;
+				}
 				if (pathname === "/dynamic/" && !siteConfig.pages.dynamic) {
 					return false;
 				}
@@ -289,6 +346,12 @@ export default defineConfig({
 					return false;
 				}
 				return true;
+			},
+			serialize: (item) => {
+				// 文章页输出 lastmod（优先 updated，其次 published），其余页面保持默认
+				const pathname = new URL(item.url).pathname;
+				const lastmod = postLastmodMap.get(pathname);
+				return lastmod ? { ...item, lastmod } : item;
 			},
 		}),
 		mdx(),
