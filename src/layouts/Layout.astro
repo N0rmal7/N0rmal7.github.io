@@ -32,7 +32,7 @@ import {
 } from "@/constants/constants";
 import { defaultFavicons } from "@/constants/icon";
 import type { Favicon } from "@/types/config";
-import { isHomePage } from "@/utils/layout-utils";
+import { getBackgroundImages, isHomePage } from "@/utils/layout-utils";
 import { getAuthorAvatarUrl, getSiteLogo } from "@/utils/schema-image";
 import { buildSiteGraph, toAbsoluteUrl } from "@/utils/schema-utils";
 import { getOgLocale } from "@/utils/site-config-utils";
@@ -81,6 +81,19 @@ const mergedKeywords: string[] = [
 			.filter(Boolean),
 	),
 ];
+
+// LCP 壁纸预加载：壁纸由 JS 从 <template> 实例化，默认发现位置靠后；
+// 在 head 里按与 WallpaperSection 完全一致的媒体查询提前预载匹配的那一张，
+// 避免预载错设备对应的图片造成浪费。
+const wallpaperImages = getBackgroundImages();
+const desktopWallpaperForPreload =
+	backgroundWallpaper.mode !== "none" ? (wallpaperImages.desktop[0] ?? "") : "";
+const mobileWallpaperForPreload =
+	backgroundWallpaper.mode !== "none" ? (wallpaperImages.mobile[0] ?? "") : "";
+// 与 wallpaper-responsive.css / WallpaperSection 脚本保持一致
+const DESKTOP_WALLPAPER_MEDIA = "(min-width: 1024px), (hover: hover) and (pointer: fine)";
+const MOBILE_WALLPAPER_MEDIA =
+	"(max-width: 1023px) and (hover: none), (max-width: 1023px) and (pointer: coarse)";
 
 // apply a class to the body element to decide the height of the banner, only used for initial page load
 // Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
@@ -173,6 +186,28 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
     <meta charset="UTF-8" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self' https://github.com https://giscus.app" />
+    {/* LCP 壁纸预加载：按设备媒体查询只预载实际会被实例化的那一张 */}
+    {desktopWallpaperForPreload && (
+      <link
+        rel="preload"
+        as="image"
+        href={desktopWallpaperForPreload}
+        media={DESKTOP_WALLPAPER_MEDIA}
+        fetchpriority="high"
+      />
+    )}
+    {mobileWallpaperForPreload && mobileWallpaperForPreload !== desktopWallpaperForPreload && (
+      <link
+        rel="preload"
+        as="image"
+        href={mobileWallpaperForPreload}
+        media={MOBILE_WALLPAPER_MEDIA}
+        fetchpriority="high"
+      />
+    )}
+    {/* 评论 / GitHub 卡片等外部域名的 DNS 预解析（开销极低） */}
+    <link rel="dns-prefetch" href="https://giscus.app" />
+    <link rel="dns-prefetch" href="https://api.github.com" />
     <style is:inline>
 			@layer properties, theme, base, components, utilities;
 		</style>
