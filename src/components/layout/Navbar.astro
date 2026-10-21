@@ -51,12 +51,20 @@ const navbarMenuAlign = siteConfig.navbar.menuAlign ?? "center";
 const isNavbarMenuCentered = navbarMenuAlign === "center";
 
 // 检查是否有任何显示设置可用（总开关关闭时下方各项均为 false）
-const isDisplaySettingsEnabled = displaySettingsConfig.enable;
+// 注意：外观三项已通过配置关闭，但特效（樱花）与看板娘仍可切换，
+// 所以按钮显示条件必须覆盖这两项，否则面板入口会消失。
 const showThemeColor = displaySettingsConfig.themeColorSwitchable;
 const isWallpaperSwitchable = displaySettingsConfig.wallpaperModeSwitchable;
 const allowLayoutSwitch = displaySettingsConfig.layoutSwitchable;
+const isSakuraSwitchable = displaySettingsConfig.sakuraSwitchable;
+// 看板娘开关在面板里固定可切换（配置类型中没有 mascot 字段）
+const isMascotSwitchable = true;
 const hasDisplaySettings =
-	showThemeColor || isWallpaperSwitchable || allowLayoutSwitch;
+	showThemeColor ||
+	isWallpaperSwitchable ||
+	allowLayoutSwitch ||
+	isSakuraSwitchable ||
+	isMascotSwitchable;
 
 // 解析导航栏链接（按 siteConfig.pages 过滤 + i18n 名称），桌面下拉与移动抽屉共用
 const links: NavBarLink[] = resolveNavMenuLinks();
@@ -130,6 +138,8 @@ const links: NavBarLink[] = resolveNavMenuLinks();
                         <span class="bg-player-icon-pause hidden"><Icon name="material-symbols:pause-rounded" class="text-[1.5rem]" /></span>
                     </button>
                 )}
+                {/* 设置面板（外观页已通过配置移除，仅保留特效/看板娘） */}
+                {displaySettingsConfig.enable && <DisplaySettings client:load></DisplaySettings>}
                 {hasDisplaySettings && (
                         <button aria-label="Display Settings" aria-controls="display-setting" aria-expanded="false" class="btn-plain scale-animation rounded-lg h-9 w-9 md:h-11 md:w-11 active:scale-90" id="display-settings-switch">
                             <Icon name="mingcute:settings-3-line" class="text-[1.25rem]"></Icon>
@@ -147,7 +157,6 @@ const links: NavBarLink[] = resolveNavMenuLinks();
                 <MusicPlayer />
             </div>
         )}
-        {isDisplaySettingsEnabled && <DisplaySettings client:load></DisplaySettings>}
     </div>
 </div>
 

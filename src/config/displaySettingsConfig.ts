@@ -26,16 +26,16 @@ export const displaySettingsConfig: DisplaySettingsConfig =
 		// ── 外观 (Appearance) ──────────────────────────────────
 
 		// 主题色选择器开关
-		themeColorSwitchable: true,
+		themeColorSwitchable: false,
 
 		// 文章列表布局切换开关
-		layoutSwitchable: true,
+		layoutSwitchable: false,
 
 		// 卡片边框和阴影开关
-		cardBorderSwitchable: true,
+		cardBorderSwitchable: false,
 
 		// 卡片风格跟随主题色开关
-		cardFollowThemeSwitchable: true,
+		cardFollowThemeSwitchable: false,
 
 		// ── 壁纸 (Wallpaper) ──────────────────────────────────
 

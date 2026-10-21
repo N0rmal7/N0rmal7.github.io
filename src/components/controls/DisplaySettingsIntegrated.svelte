@@ -109,7 +109,7 @@ let visibleTabs = $derived.by(() => {
 });
 
 let showTabBar = $derived(visibleTabs.length > 1);
-let activeTab = $state<TabKey>("appearance");
+let activeTab = $state<TabKey>("effects");
 
 // Auto-switch active tab if it becomes invisible
 $effect(() => {
