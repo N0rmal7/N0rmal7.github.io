@@ -205,9 +205,20 @@ const ogImageAlt = propsOgImageAlt ?? pageTitle;
         fetchpriority="high"
       />
     )}
-    {/* 评论 / GitHub 卡片等外部域名的 DNS 预解析（开销极低） */}
-    <link rel="dns-prefetch" href="https://giscus.app" />
-    <link rel="dns-prefetch" href="https://api.github.com" />
+    {/* 评论 / GitHub 卡片等外部域名提示。
+        文章页会真正加载 giscus 评论框 → 用 preconnect 省掉 DNS+TLS 往返；
+        其他页面用 dns-prefetch 即可（不建立连接，零浪费）。 */}
+    {setOGTypeArticle ? (
+      <>
+        <link rel="preconnect" href="https://giscus.app" crossorigin />
+        <link rel="dns-prefetch" href="https://api.github.com" />
+      </>
+    ) : (
+      <>
+        <link rel="dns-prefetch" href="https://giscus.app" />
+        <link rel="dns-prefetch" href="https://api.github.com" />
+      </>
+    )}
     <style is:inline>
 			@layer properties, theme, base, components, utilities;
 		</style>
