@@ -193,6 +193,6 @@ strcpy(p, s);                  // 但 strcpy 要写 x+1 字节（含 \0）→ �
 
 使用指令：`python3 evilPatcher.py <待修补的ELF程序> <沙箱规则文件.asm>`
 
-### 结语
+## 结语
 
 暂时先总结这么多，有新的patch技巧会不定期更新（
