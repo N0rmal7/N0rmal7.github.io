@@ -163,6 +163,16 @@ jmp next_one_addr               ;跳转回原来地方的下一条汇编地址
 1.第二条汇编指令里的`mov/lea`如何取缔：如果程序把`heap_ptr`设置为存放堆基址的变量(`void **heap_ptr`)，用`mov`；如果程序里使用的是如`void *heap[16]`这类内联数组，那么就用`lea`
 2.第三条汇编指令里的`rbx`仅在程序把heap_idx存进rbx寄存器的情况下才符合，实际情况以对应题目idx赋值处为准
 
+
+
+**还有一种方法**：直接改原程序汇编，把存放数组元素地址的寄存器从 `rax` 改为 `rbx`（`rax` 会被 `call free` 清掉，`rbx` 是 callee-saved 不会被破坏），并在 `call free` 后直接对 `rbx` 执行 `mov qword ptr [rbx], 0` 完成置零。
+
+**示例：**
+
+![patch前](./awdp-patch-tips/patch前.png)
+
+![patch后](./awdp-patch-tips/patch后.png)
+
 ### 6.off by one
 
 #### 原理：
