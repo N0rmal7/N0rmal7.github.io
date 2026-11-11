@@ -95,13 +95,13 @@ exit 0
 
 放置在~/.local/bin路径下：
 
-![image1](./pwntools&gdb-in-wsl/image1.png)
+![image1](./fix-gdb-attach-in-wsl/image1.png)
 
 (记得加执行权限)
 
 把pwntools-terminal文件放在对应目录下后，打开~/.bashrc配置文件，在末尾写入PATH：
 
-![image2](./pwntools&gdb-in-wsl/image2.png)
+![image2](./fix-gdb-attach-in-wsl/image2.png)
 
 （在改配置文件时以防万一可以打个备份，但是这里就不细讲了）
 
@@ -109,7 +109,7 @@ exit 0
 
 然后我们就能正常在wsl下使用pwntools + gdb动态调试了。
 
-![image3](./pwntools&gdb-in-wsl/image3.png)
+![image3](./fix-gdb-attach-in-wsl/image3.png)
 
 ## 结语
 
