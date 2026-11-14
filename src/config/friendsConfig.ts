@@ -49,6 +49,24 @@ export const friendsConfig: FriendLink[] = [
 		weight: 10,
 		enabled: true,
 	},
+	{
+		title: "didongji91",
+		imgurl: "https://blog.sl33pd1n0.workers.dev/avatar.jpg",
+		desc: "这里记录学习笔记,题解,以及一些碎碎念....",
+		siteurl: "https://blog.sl33pd1n0.workers.dev/",
+		tags: ["CTF"],
+		weight: 10,
+		enabled: true,
+	},
+	{
+		title: "Sauy",
+		imgurl: "https://sauy.top/images/sauy.jpg",
+		desc: "Sauy 的个人技术博客，记录 CTF 题解、漏洞研究、渗透学习与 Web3 笔记。",
+		siteurl: "https://sauy.top/",
+		tags: ["Web", "CTF", "Web3"],
+		weight: 10,
+		enabled: true,
+	},
 ];
 
 // 获取启用的友链并进行排序
