@@ -141,8 +141,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       pagefind:
-        specifier: ^1.5.2
-        version: 1.5.2
+        specifier: ^1.6.0
+        version: 1.6.0
       pako:
         specifier: ^3.0.1
         version: 3.0.1
@@ -2058,8 +2058,18 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
+  '@pagefind/darwin-arm64@1.6.0':
+    resolution: {integrity: sha512-611gl64aqN12UcMyKPtZ8+vRWBKlJFSh2JgO8uScxa1Eyjo1dXz9r4wZuRno0yCUE/KN0FauEoKZ3KEwUYHCCg==}
+    cpu: [arm64]
+    os: [darwin]
+
   '@pagefind/darwin-x64@1.5.2':
     resolution: {integrity: sha512-IojxFWMEJe0RQ7PQ3KXQsPIImNsbpPYpoZ+QUDrL8fAl/O27IX+LVLs74/UzEZy5uA2LD8Nz1AiwKr72vrkZQw==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@pagefind/darwin-x64@1.6.0':
+    resolution: {integrity: sha512-rd3ZbtuxyYqjASKZAPuIV7eeQQHJ7VYpoNKKG8CvglaD3g30eT5Nb7XGNLYwVReBsCccpkURwrGwWjSwr8nyQQ==}
     cpu: [x64]
     os: [darwin]
 
@@ -2071,8 +2081,18 @@ packages:
     cpu: [x64]
     os: [freebsd]
 
+  '@pagefind/freebsd-x64@1.6.0':
+    resolution: {integrity: sha512-d+sXqsaThszmPWGVDSRKqIz9GpZcj/bAksNZfg19asSxU0ogNPOMND4kV4giQvOjPFMsltUFf6hQJfoHQ6+hSQ==}
+    cpu: [x64]
+    os: [freebsd]
+
   '@pagefind/linux-arm64@1.5.2':
     resolution: {integrity: sha512-Ovt9+K35sqzn8H3ZMXGwls4TD/wMJuvRtShHIsmUQREmaxjrDEX7gHckRCrwYJ4XE1H1p6HkLz3wukrAnsfXQw==}
+    cpu: [arm64]
+    os: [linux]
+
+  '@pagefind/linux-arm64@1.6.0':
+    resolution: {integrity: sha512-SLB2I+XqCZma8NvIGIH8nyKblgKIxw5PmqsVtofWOKxNHhEtOEsddbqU+hsrNcT3EV0faM6UmKDHVIxcPYq29w==}
     cpu: [arm64]
     os: [linux]
 
@@ -2081,13 +2101,28 @@ packages:
     cpu: [x64]
     os: [linux]
 
+  '@pagefind/linux-x64@1.6.0':
+    resolution: {integrity: sha512-IbMSx/+Vr/Xk0TTBlLkjgK+rvnbOXGmmb2/MKxQu99AR5DsqQoV3NKEA9PQz2tAhuCZjeD5xJBp4w5N5DHIC7Q==}
+    cpu: [x64]
+    os: [linux]
+
   '@pagefind/windows-arm64@1.5.2':
     resolution: {integrity: sha512-hN9Nh90fNW61nNRCW9ZyQrAj/mD0eRvmJ8NlTUzkbuW8kIzGJUi3cxjFkEcMZ5h/8FsKWD/VcouZl4yo1F7B6g==}
     cpu: [arm64]
     os: [win32]
 
+  '@pagefind/windows-arm64@1.6.0':
+    resolution: {integrity: sha512-wUrniW3REr7VWJHz6xE6F/p/AQgHDFpGZiY9sbWT71KfEijDE5Jnc37V8zc7cilV9h/QkwJGXoEP2+ZLwDmhtw==}
+    cpu: [arm64]
+    os: [win32]
+
   '@pagefind/windows-x64@1.5.2':
     resolution: {integrity: sha512-Fa2Iyw7kaDRzGMfNYNUXNW2zbL5FQVDgSOcbDHdzBrDEdpqOqg8TcZ68F22ol6NJ9IGzvUdmeyZypLW5dyhqsg==}
+    cpu: [x64]
+    os: [win32]
+
+  '@pagefind/windows-x64@1.6.0':
+    resolution: {integrity: sha512-cUA2+yXfbymdJllyMjY5YTBwuOgh0/H53Pn5fYKjDnDjk154Ft4U5RVj3TenWySPL/jG6zJfARUWSlyUyXHlZw==}
     cpu: [x64]
     os: [win32]
 
@@ -4925,6 +4960,10 @@ packages:
     resolution: {integrity: sha512-XTUaK0hXMCu2jszWE584JGQT7y284TmMV9l/HX3rnG5uo3rHI/uHU56XTyyyPFjeWEBxECbAi0CaFDJOONtG0Q==}
     hasBin: true
 
+  pagefind@1.6.0:
+    resolution: {integrity: sha512-yeOd9EA0TUE1PUfbQIluBxzPadBG5/0BV48FAxwMVLkhZcOvwCz6TX4/a/Ofz97pF9/FwwT7CVbTC97BfmI+LQ==}
+    hasBin: true
+
   pako@1.0.11:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
 
@@ -6915,7 +6954,7 @@ snapshots:
       satteri: 0.9.5
       ultrahtml: 1.7.0
       unified: 11.0.5
-      unist-util-visit: 5.1.0
+      unist-util-visit: 5.2.0
       vfile: 6.0.3
     optionalDependencies:
       '@astrojs/markdown-remark': 7.3.0(supports-color@10.2.2)
@@ -7793,7 +7832,7 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.11.1
       '@emnapi/runtime': 1.11.1
-      '@napi-rs/wasm-runtime': 1.2.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
+      '@napi-rs/wasm-runtime': 1.2.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
     optional: true
 
   '@bruits/satteri-win32-arm64-msvc@0.10.5':
@@ -8093,12 +8132,12 @@ snapshots:
       '@ctrl/tinycolor': 4.2.1
       hast-util-select: 6.0.4
       hast-util-to-html: 9.0.5
-      hast-util-to-text: 4.0.2
+      hast-util-to-text: 4.0.3
       hastscript: 9.0.1
-      postcss: 8.5.26
-      postcss-nested: 6.2.0(postcss@8.5.26)
-      unist-util-visit: 5.1.0
-      unist-util-visit-parents: 6.0.2
+      postcss: 8.5.31
+      postcss-nested: 6.2.0(postcss@8.5.31)
+      unist-util-visit: 5.2.0
+      unist-util-visit-parents: 6.1.0
 
   '@expressive-code/core@0.44.2':
     dependencies:
@@ -8503,6 +8542,13 @@ snapshots:
       '@emnapi/runtime': 1.11.3
       '@tybys/wasm-util': 0.10.3
 
+  '@napi-rs/wasm-runtime@1.2.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
+    dependencies:
+      '@emnapi/core': 1.11.1
+      '@emnapi/runtime': 1.11.1
+      '@tybys/wasm-util': 0.10.3
+    optional: true
+
   '@napi-rs/wasm-runtime@1.2.6(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)':
     dependencies:
       '@emnapi/core': 1.11.3
@@ -8523,7 +8569,13 @@ snapshots:
   '@pagefind/darwin-arm64@1.5.2':
     optional: true
 
+  '@pagefind/darwin-arm64@1.6.0':
+    optional: true
+
   '@pagefind/darwin-x64@1.5.2':
+    optional: true
+
+  '@pagefind/darwin-x64@1.6.0':
     optional: true
 
   '@pagefind/default-ui@1.5.2': {}
@@ -8531,16 +8583,31 @@ snapshots:
   '@pagefind/freebsd-x64@1.5.2':
     optional: true
 
+  '@pagefind/freebsd-x64@1.6.0':
+    optional: true
+
   '@pagefind/linux-arm64@1.5.2':
+    optional: true
+
+  '@pagefind/linux-arm64@1.6.0':
     optional: true
 
   '@pagefind/linux-x64@1.5.2':
     optional: true
 
+  '@pagefind/linux-x64@1.6.0':
+    optional: true
+
   '@pagefind/windows-arm64@1.5.2':
     optional: true
 
+  '@pagefind/windows-arm64@1.6.0':
+    optional: true
+
   '@pagefind/windows-x64@1.5.2':
+    optional: true
+
+  '@pagefind/windows-x64@1.6.0':
     optional: true
 
   '@pkgjs/parseargs@0.11.0':
@@ -10494,7 +10561,7 @@ snapshots:
       hast-util-phrasing: 3.0.1
       hast-util-whitespace: 3.0.0
       html-whitespace-sensitive-tag-names: 3.0.1
-      unist-util-visit-parents: 6.0.2
+      unist-util-visit-parents: 6.1.0
 
   hast-util-from-dom@5.0.1:
     dependencies:
@@ -10596,7 +10663,7 @@ snapshots:
       nth-check: 2.1.1
       property-information: 7.2.0
       space-separated-tokens: 2.0.2
-      unist-util-visit: 5.1.0
+      unist-util-visit: 5.2.0
       zwitch: 2.0.4
 
   hast-util-to-estree@3.1.3(supports-color@10.2.2):
@@ -11178,7 +11245,7 @@ snapshots:
       mdast-util-to-markdown: 2.1.2
       parse-entities: 4.0.2
       stringify-entities: 4.0.4
-      unist-util-visit-parents: 6.0.2
+      unist-util-visit-parents: 6.1.0
     transitivePeerDependencies:
       - supports-color
 
@@ -11350,7 +11417,7 @@ snapshots:
       mdast-util-to-string: 4.0.0
       micromark-util-classify-character: 2.0.1
       micromark-util-decode-string: 2.0.1
-      unist-util-visit: 5.1.0
+      unist-util-visit: 5.2.0
       zwitch: 2.0.4
 
   mdast-util-to-string@4.0.0:
@@ -11926,6 +11993,16 @@ snapshots:
       '@pagefind/windows-arm64': 1.5.2
       '@pagefind/windows-x64': 1.5.2
 
+  pagefind@1.6.0:
+    optionalDependencies:
+      '@pagefind/darwin-arm64': 1.6.0
+      '@pagefind/darwin-x64': 1.6.0
+      '@pagefind/freebsd-x64': 1.6.0
+      '@pagefind/linux-arm64': 1.6.0
+      '@pagefind/linux-x64': 1.6.0
+      '@pagefind/windows-arm64': 1.6.0
+      '@pagefind/windows-x64': 1.6.0
+
   pako@1.0.11: {}
 
   pako@3.0.1: {}
@@ -12140,6 +12217,11 @@ snapshots:
   postcss-nested@6.2.0(postcss@8.5.26):
     dependencies:
       postcss: 8.5.26
+      postcss-selector-parser: 6.1.4
+
+  postcss-nested@6.2.0(postcss@8.5.31):
+    dependencies:
+      postcss: 8.5.31
       postcss-selector-parser: 6.1.4
 
   postcss-nested@7.0.2(postcss@8.5.31):
